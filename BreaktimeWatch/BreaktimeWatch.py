@@ -18,12 +18,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from datetime import datetime
+import math
+import _thread
 
 
 class Functions(object):
     time1 = datetime.now()
     time2 = datetime.now()
-    total = 0
+    totalmin = 0
+    totalsec = 0
+    processrunning = 0
+
 
     def __init__():
         dt = datetime.now()
@@ -38,14 +43,44 @@ class Functions(object):
 
     def Start():
         Functions.time1 = Functions.GetTime()
+        Functions.processrunning = 1
 
     def Stop():
         Functions.time2 = Functions.GetTime()
-        Functions.CalcDiff()
-
+        if Functions.processrunning == 1:
+            Functions.CalcDiff()
+            Functions.processrunning = 0
+        
     def CalcDiff(): 
-        diff = Functions.time2 - Functions.time1
-        Functions.total = Functions.total + diff.seconds
+        
+        diff = Functions.time2 - Functions.time1       
+        Functions.totalsec = Functions.totalsec + diff.seconds
+        Functions.totalmin = Functions.totalsec / 60
+        Functions.totalmin = math.floor(Functions.totalmin)
+        print()
         print(diff)
-        print(Functions.total)
+        print(Functions.totalsec)
+        print(Functions.totalmin)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
         

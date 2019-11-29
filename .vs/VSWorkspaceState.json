@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\BreaktimeWatch"
   ],
-  "SelectedNode": "\\BreaktimeWatch_GUI.py",
+  "SelectedNode": "\\BreaktimeWatch\\BreaktimeWatch.py",
   "PreviewInSolutionExplorer": false
 }
