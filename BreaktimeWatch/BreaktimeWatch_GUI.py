@@ -27,6 +27,7 @@ import os.path
 from os import path
 from datetime import datetime
 import json
+import math
 
 
 
@@ -52,6 +53,11 @@ class Ui_BreaktimeWatchGUI(object):
         if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt') == False:
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"w+")
             file.close()
+
+        daynow = datetime.now().strftime("%B %d, %Y")
+        btwf.Functions.GetTotalFromJson(daynow)
+        btwf.Functions.totalmin = btwf.Functions.totalsec / 60
+        btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
 
         return super().__init__(*args, **kwargs)
    
