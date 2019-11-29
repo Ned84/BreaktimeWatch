@@ -1,18 +1,62 @@
 # -*- coding: utf-8 -*-
+"""
+BreaktimeWatch | Program for tracking breaktimes (coffee- or smokebreak)
+Copyright (C) 2019  Ned84 ned84@protonmail.com
 
-# Form implementation generated from reading ui file 'BreaktimeWatch.ui'
-#
-# Created by: PyQt5 UI code generator 5.13.2
-#
-# WARNING! All changes made in this file will be lost!
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSlot
+
 import BreaktimeWatch as btwf
+
+import os.path
+from os import path
+from datetime import datetime
+import json
+
 
 
 class Ui_BreaktimeWatchGUI(object):
+
+    def __init__(self, *args, **kwargs):
+        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch') == False:
+            os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch')
+
+        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData') == False:
+            os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData')
+
+        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles') == False:
+            os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles')
+           
+
+        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json') == False:
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json',"w+")
+            data = [{"date": "November 01, 1984","totaltime": 6013}]
+            json.dump(data,file, indent=1, sort_keys=True)
+            file.close()
+
+        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt') == False:
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"w+")
+            file.close()
+
+        return super().__init__(*args, **kwargs)
+   
+
+
     def setupUi(self, BreaktimeWatchGUI):
         BreaktimeWatchGUI.setObjectName("BreaktimeWatchGUI")
         BreaktimeWatchGUI.resize(411, 330)
@@ -33,7 +77,7 @@ class Ui_BreaktimeWatchGUI(object):
         self.totallabel.setGeometry(QtCore.QRect(5, 254, 44, 21))
         self.totallabel.setObjectName("totallabel")
         self.calendarWidget = QtWidgets.QCalendarWidget(self.centralwidget)
-        self.calendarWidget.setEnabled(True)
+        self.calendarWidget.setEnabled(False)
         self.calendarWidget.setGeometry(QtCore.QRect(10, 10, 392, 236))
         self.calendarWidget.setStyleSheet("color: rgb(0, 0, 0);")
         self.calendarWidget.setGridVisible(False)
@@ -51,10 +95,12 @@ class Ui_BreaktimeWatchGUI(object):
         self.minspinBox.setReadOnly(True)
         self.minspinBox.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
         self.minspinBox.setObjectName("minspinBox")
+        self.minspinBox.hide()
         self.minTextbox = QtWidgets.QPlainTextEdit(self.centralwidget)
         self.minTextbox.setGeometry(QtCore.QRect(50, 250, 104, 30))
         self.minTextbox.setReadOnly(True)
         self.minTextbox.setObjectName("minTextbox")
+        self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setGeometry(QtCore.QRect(280, 230, 151, 111))
         self.frame.setStyleSheet("image: url(:/resources/background.png);")
@@ -97,6 +143,18 @@ class Ui_BreaktimeWatchGUI(object):
         @pyqtSlot()
         def DisableWatch(): 
             self.frame_2.hide()
+
+        @pyqtSlot()
+        def EditOnOff():         
+            if self.minspinBox.isVisible() == True:
+                self.minspinBox.hide()
+                self.minTextbox.show()
+                self.calendarWidget.setEnabled(False)
+                self.calendarWidget.setSelectedDate(datetime.now())
+            else:
+                self.minspinBox.show()
+                self.minTextbox.hide()
+                self.calendarWidget.setEnabled(True)
           
                 
         self.startButton.clicked.connect(btwf.Functions.Start)
@@ -105,6 +163,8 @@ class Ui_BreaktimeWatchGUI(object):
         self.stopButton.clicked.connect(btwf.Functions.Stop)
         self.stopButton.clicked.connect(WriteMinInTextbox)
         self.stopButton.clicked.connect(DisableWatch)
+
+        self.editButton1.clicked.connect(EditOnOff)
 
 
 
@@ -120,11 +180,11 @@ class Ui_BreaktimeWatchGUI(object):
 import Resources_rc
 
 
-
-import sys
-app = QtWidgets.QApplication(sys.argv)
-BreaktimeWatchGUI = QtWidgets.QMainWindow()
-ui = Ui_BreaktimeWatchGUI()
-ui.setupUi(BreaktimeWatchGUI)
-BreaktimeWatchGUI.show()
-sys.exit(app.exec_())
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    BreaktimeWatchGUI = QtWidgets.QMainWindow()
+    ui = Ui_BreaktimeWatchGUI()
+    ui.setupUi(BreaktimeWatchGUI)
+    BreaktimeWatchGUI.show()
+    sys.exit(app.exec_())
