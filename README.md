@@ -1,2 +1,2 @@
-# SmokeWatch
-Program to track smokebreaks during workhours.
+# BreaktimeWatch
+Program to track breaktimes (coffe- or smokebreak) during workhours. 

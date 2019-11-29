@@ -54,7 +54,7 @@ class Ui_BreaktimeWatchGUI(object):
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"w+")
             file.close()
 
-        daynow = datetime.now().strftime("%B %d, %Y")
+        daynow = datetime.now().strftime("%d-%m, %Y")
         btwf.Functions.GetTotalFromJson(daynow)
         btwf.Functions.totalmin = btwf.Functions.totalsec / 60
         btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
@@ -94,19 +94,23 @@ class Ui_BreaktimeWatchGUI(object):
         self.stopButton = QtWidgets.QPushButton(self.centralwidget)
         self.stopButton.setGeometry(QtCore.QRect(110, 290, 93, 28))
         self.stopButton.setObjectName("stopButton")
-        self.minspinBox = QtWidgets.QSpinBox(self.centralwidget)
-        self.minspinBox.setEnabled(True)
-        self.minspinBox.setGeometry(QtCore.QRect(50, 250, 104, 30))
-        self.minspinBox.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        self.minspinBox.setReadOnly(True)
-        self.minspinBox.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
-        self.minspinBox.setObjectName("minspinBox")
-        self.minspinBox.hide()
+        self.stopButton.setEnabled(False)
+        #self.minspinBox = QtWidgets.QSpinBox(self.centralwidget)
+        #self.minspinBox.setEnabled(True)
+        #self.minspinBox.setGeometry(QtCore.QRect(50, 250, 104, 30))
+        #self.minspinBox.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        #self.minspinBox.setReadOnly(True)
+        #self.minspinBox.setButtonSymbols(QtWidgets.QAbstractSpinBox.UpDownArrows)
+        #self.minspinBox.setObjectName("minspinBox")
+        #self.minspinBox.setMaximum(9999)
+        #self.minspinBox.hide()
         self.minTextbox = QtWidgets.QPlainTextEdit(self.centralwidget)
         self.minTextbox.setGeometry(QtCore.QRect(50, 250, 104, 30))
         self.minTextbox.setReadOnly(True)
         self.minTextbox.setObjectName("minTextbox")
         self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
+        self.minTextbox.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.minTextbox.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.frame = QtWidgets.QFrame(self.centralwidget)
         self.frame.setGeometry(QtCore.QRect(280, 230, 151, 111))
         self.frame.setStyleSheet("image: url(:/resources/background.png);")
@@ -120,7 +124,7 @@ class Ui_BreaktimeWatchGUI(object):
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
         self.frame_2.hide()
-        self.minspinBox.raise_()
+        #self.minspinBox.raise_()
         self.minTextbox.raise_()
         self.editButton1.raise_()
         self.totallabel.raise_()
@@ -145,24 +149,47 @@ class Ui_BreaktimeWatchGUI(object):
         @pyqtSlot()
         def ShowWatch():     
             self.frame_2.show()
+            self.editButton1.setEnabled(False)
+            self.startButton.setEnabled(False)
+            self.stopButton.setEnabled(True)
 
         @pyqtSlot()
         def DisableWatch(): 
             self.frame_2.hide()
+            self.editButton1.setEnabled(True)
+            self.startButton.setEnabled(True)
+            self.stopButton.setEnabled(False)
+
+        @pyqtSlot()
+        def ChangeSelectedDate(): 
+            daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
+            btwf.Functions.GetTotalFromJson(daychosen)
+            self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
 
         @pyqtSlot()
         def EditOnOff():         
-            if self.minspinBox.isVisible() == True:
-                self.minspinBox.hide()
-                self.minTextbox.show()
+            if self.minTextbox.isReadOnly() == False:
+                self.minTextbox.setReadOnly(True)
                 self.calendarWidget.setEnabled(False)
                 self.calendarWidget.setSelectedDate(datetime.now())
+                self.startButton.setEnabled(True)
+                self.stopButton.setEnabled(True)
             else:
-                self.minspinBox.show()
-                self.minTextbox.hide()
+                self.minTextbox.setReadOnly(False)
                 self.calendarWidget.setEnabled(True)
+                self.startButton.setEnabled(False)
+                self.stopButton.setEnabled(False)
+
+        @pyqtSlot()
+        def EditTimeValue(): 
+            daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
+            timechosen = int("{0}".format(self.minTextbox.toPlainText()))
+            self.minTextbox.setPlainText("{0}".format(timechosen))
+            timechosen = timechosen * 60
+            btwf.Functions.WriteTimeToJson(daychosen,timechosen)
+            
           
-                
+            
         self.startButton.clicked.connect(btwf.Functions.Start)
         self.startButton.clicked.connect(ShowWatch)
 
@@ -172,6 +199,9 @@ class Ui_BreaktimeWatchGUI(object):
 
         self.editButton1.clicked.connect(EditOnOff)
 
+        self.calendarWidget.clicked.connect(ChangeSelectedDate)
+
+        self.minTextbox.blockCountChanged.connect(EditTimeValue)
 
 
 

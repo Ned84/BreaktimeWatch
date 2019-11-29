@@ -31,7 +31,8 @@ class Functions(object):
     totalmin = 0
     totalsec = 0
     diffsec = 0
-    processrunning = 0
+    #processrunning = 0
+    selecteddate = datetime.now()
 
 
     def __init__():
@@ -47,20 +48,20 @@ class Functions(object):
 
     def Start():
         Functions.time1 = Functions.GetTime()
-        daynow = datetime.now().strftime("%B %d, %Y")
+        daynow = datetime.now().strftime("%d-%m, %Y")
         Functions.GetTotalFromJson(daynow)
-        Functions.processrunning = 1
+        #Functions.processrunning = 1
 
 
     def Stop():
         Functions.time2 = Functions.GetTime()
-        if Functions.processrunning == 1:
-            Functions.CalcDiff()
+        #if Functions.processrunning == 1:
+        Functions.CalcDiff()
 
-            daynow = datetime.now().strftime("%B %d, %Y")
-            Functions.WriteTimeToJson(daynow,Functions.totalsec)
+        daynow = datetime.now().strftime("%d-%m, %Y")
+        Functions.WriteTimeToJson(daynow,Functions.totalsec)
 
-            Functions.processrunning = 0
+            #Functions.processrunning = 0
         
     def CalcDiff(): 
         try:
@@ -111,8 +112,10 @@ class Functions(object):
                 date_details['date'] = item['date']
                 date_details['totaltime'] = item['totaltime']
                 if date_details['date'] == date:
-                     Functions.totalsec = date_details['totaltime']
-                     found = True
+                    Functions.totalsec = date_details['totaltime']
+                    Functions.totalmin = Functions.totalsec / 60
+                    Functions.totalmin = math.floor(Functions.totalmin)
+                    found = True
                 date_list.append(date_details)
             file.close()
 
@@ -121,6 +124,9 @@ class Functions(object):
                 date_list.append({"date": date,"totaltime": 0})
                 json.dump(date_list,file, indent=1, sort_keys=True)
                 file.close()
+                Functions.totalsec = 0
+                Functions.totalmin = Functions.totalsec / 60
+                Functions.totalmin = math.floor(Functions.totalmin)
 
         except Exception as exc: 
             Functions.WriteLog(exc)
