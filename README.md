@@ -9,7 +9,8 @@ Program to track breaktimes (coffe- or smokebreak) during workhours.
 * [Dependencies](#dependencies)
 * [License](#license)
 * [Install](#install)
-  * [Build executable from py](#build-executable-from-py)
+  * [Build executable from .py](#build-executable-from-py)
+* [Support](#support)
 
 ## Description
 
@@ -43,7 +44,7 @@ Optional Pyinstaller. Infos are [here.](https://www.pyinstaller.org/downloads.ht
 >along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Install
-### Build executable from py
+### Build executable from .py
 ```
 pip install pyinstaller
 ```
@@ -51,5 +52,8 @@ pip install pyinstaller
 pyinstaller --windowed BreaktimeWatch_GUI.py
 ```
 
+## Support
+
+If you require help or if you have suggestions please refer to the [Issue section](https://github.com/Ned84/BreaktimeWatch/issues).
 
 
