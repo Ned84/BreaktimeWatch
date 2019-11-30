@@ -1,5 +1,8 @@
 # BreaktimeWatch Changelog
 
+## V0.4
+Implemented editorial function
+
 ## V0.3
 Implemented folderstructure, errorlogging and JSON logging file
 
