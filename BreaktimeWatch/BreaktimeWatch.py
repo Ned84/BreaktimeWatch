@@ -31,7 +31,6 @@ class Functions(object):
     totalmin = 0
     totalsec = 0
     diffsec = 0
-    #processrunning = 0
     selecteddate = datetime.now()
 
 
@@ -50,18 +49,15 @@ class Functions(object):
         Functions.time1 = Functions.GetTime()
         daynow = datetime.now().strftime("%d-%m, %Y")
         Functions.GetTotalFromJson(daynow)
-        #Functions.processrunning = 1
 
 
     def Stop():
         Functions.time2 = Functions.GetTime()
-        #if Functions.processrunning == 1:
         Functions.CalcDiff()
 
         daynow = datetime.now().strftime("%d-%m, %Y")
         Functions.WriteTimeToJson(daynow,Functions.totalsec)
 
-            #Functions.processrunning = 0
         
     def CalcDiff(): 
         try:
