@@ -69,10 +69,10 @@ class Functions(object):
             Functions.totalsec = Functions.totalsec + diff.seconds
             Functions.totalmin = Functions.totalsec / 60
             Functions.totalmin = math.floor(Functions.totalmin)
-            print()
-            print(diff)
-            print(Functions.totalsec)
-            print(Functions.totalmin)
+            print()   
+            print("diff = {0}".format(diff))
+            print("totalsec = {0}".format(Functions.totalsec))
+            print("totalmin = {0}".format(Functions.totalmin))
         except Exception as exc: 
             Functions.WriteLog(exc)
 
@@ -90,7 +90,7 @@ class Functions(object):
                      date_details['totaltime'] = totalsec
 
                 date_list.append(date_details)
-            print(date_list)
+            print("JSON = \n\r       {0}".format(date_list))
             file.close()
 
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "w")

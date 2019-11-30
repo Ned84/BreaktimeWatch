@@ -172,8 +172,13 @@ class Ui_BreaktimeWatchGUI(object):
                 self.minTextbox.setReadOnly(True)
                 self.calendarWidget.setEnabled(False)
                 self.calendarWidget.setSelectedDate(datetime.now())
+                daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
+                btwf.Functions.GetTotalFromJson(daychosen)
+                btwf.Functions.totalmin = btwf.Functions.totalsec / 60
+                btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
+                self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
                 self.startButton.setEnabled(True)
-                self.stopButton.setEnabled(True)
+                self.stopButton.setEnabled(False)
             else:
                 self.minTextbox.setReadOnly(False)
                 self.calendarWidget.setEnabled(True)
@@ -183,11 +188,19 @@ class Ui_BreaktimeWatchGUI(object):
         @pyqtSlot()
         def EditTimeValue(): 
             daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
-            timechosen = int("{0}".format(self.minTextbox.toPlainText()))
-            self.minTextbox.setPlainText("{0}".format(timechosen))
-            timechosen = timechosen * 60
-            btwf.Functions.WriteTimeToJson(daychosen,timechosen)
             
+            timechosenstring = ("{0}".format(self.minTextbox.toPlainText()))
+            timechosenstring = timechosenstring.rstrip()
+            if timechosenstring.isdigit() :
+                timechosen = int("{0}".format(self.minTextbox.toPlainText()))
+                self.minTextbox.setPlainText("{0}".format(timechosen))
+                timechosen = timechosen * 60
+                btwf.Functions.WriteTimeToJson(daychosen,timechosen)
+            else:
+                btwf.Functions.GetTotalFromJson(daychosen)
+                btwf.Functions.totalmin = btwf.Functions.totalsec / 60
+                btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
+                self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
           
             
         self.startButton.clicked.connect(btwf.Functions.Start)
