@@ -1,5 +1,8 @@
 # BreaktimeWatch Changelog
 
+##V1.0
+Changed repo status from private to public
+
 ## V0.4
 Implemented editorial function
 
