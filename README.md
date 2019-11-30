@@ -48,7 +48,7 @@ Optional Pyinstaller. Infos are [here.](https://www.pyinstaller.org/downloads.ht
 pip install pyinstaller
 ```
 ```
-pyinstaller --onefile --windowed BreaktimeWatch_GUI.py
+pyinstaller --windowed BreaktimeWatch_GUI.py
 ```
 
 
