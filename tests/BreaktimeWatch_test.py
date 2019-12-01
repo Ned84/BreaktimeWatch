@@ -24,8 +24,14 @@ import json
 import os
 import sys
 
+class InitClass(object):
+    def testInit():
+        dt = datetime.now()
+        dtwithoutmill = dt.replace(microsecond=0)
+        TestFunctions.total = dtwithoutmill
 
-class Functions(object):
+
+class TestFunctions(object):
     time1 = datetime.now()
     time2 = datetime.now()
     totalmin = 0
@@ -34,43 +40,41 @@ class Functions(object):
     selecteddate = datetime.now()
 
 
-    def __init__():
-        dt = datetime.now()
-        dtwithoutmill = dt.replace(microsecond=0)
-        Functions.total = dtwithoutmill
+    
 
-    def test_GetTime():
+    def GetTime():
         dt = datetime.now()
         dtwithoutmill = dt.replace(microsecond=0)
         print(dtwithoutmill)
         return dtwithoutmill
 
-    def Start():
-        Functions.time1 = Functions.GetTime()
+    def test_Start(self):
+        InitClass.testInit()
+        TestFunctions.time1 = TestFunctions.GetTime()
         daynow = datetime.now().strftime("%d-%m, %Y")
-        Functions.GetTotalFromJson(daynow)
+        TestFunctions.GetTotalFromJson(daynow)
 
 
-    def Stop():
-        Functions.time2 = Functions.GetTime()
-        Functions.CalcDiff()
+    def test_Stop(self):
+        TestFunctions.time2 = TestFunctions.GetTime()
+        TestFunctions.test_CalcDiff(self)
 
         daynow = datetime.now().strftime("%d-%m, %Y")
-        Functions.WriteTimeToJson(daynow,Functions.totalsec)
+        TestFunctions.WriteTimeToJson(daynow,TestFunctions.totalsec)
 
         
-    def CalcDiff(): 
+    def test_CalcDiff(self): 
         try:
-            diff = Functions.time2 - Functions.time1   
-            Functions.totalsec = Functions.totalsec + diff.seconds
-            Functions.totalmin = Functions.totalsec / 60
-            Functions.totalmin = math.floor(Functions.totalmin)
+            diff = TestFunctions.time2 - TestFunctions.time1   
+            TestFunctions.totalsec = TestFunctions.totalsec + diff.seconds
+            TestFunctions.totalmin = TestFunctions.totalsec / 60
+            TestFunctions.totalmin = math.floor(TestFunctions.totalmin)
             print()   
             print("diff = {0}".format(diff))
-            print("totalsec = {0}".format(Functions.totalsec))
-            print("totalmin = {0}".format(Functions.totalmin))
+            print("totalsec = {0}".format(TestFunctions.totalsec))
+            print("totalmin = {0}".format(TestFunctions.totalmin))
         except Exception as exc: 
-            Functions.WriteLog(exc)
+            TestFunctions.WriteLog(exc)
 
     def WriteTimeToJson(date,totalsec):
         try:
@@ -94,7 +98,7 @@ class Functions(object):
             file.close()
 
         except Exception as exc: 
-            Functions.WriteLog(exc)
+            TestFunctions.WriteLog(exc)
 
     def GetTotalFromJson(date):
         try:
@@ -108,9 +112,9 @@ class Functions(object):
                 date_details['date'] = item['date']
                 date_details['totaltime'] = item['totaltime']
                 if date_details['date'] == date:
-                    Functions.totalsec = date_details['totaltime']
-                    Functions.totalmin = Functions.totalsec / 60
-                    Functions.totalmin = math.floor(Functions.totalmin)
+                    TestFunctions.totalsec = date_details['totaltime']
+                    TestFunctions.totalmin = TestFunctions.totalsec / 60
+                    TestFunctions.totalmin = math.floor(TestFunctions.totalmin)
                     found = True
                 date_list.append(date_details)
             file.close()
@@ -120,12 +124,12 @@ class Functions(object):
                 date_list.append({"date": date,"totaltime": 0})
                 json.dump(date_list,file, indent=1, sort_keys=True)
                 file.close()
-                Functions.totalsec = 0
-                Functions.totalmin = Functions.totalsec / 60
-                Functions.totalmin = math.floor(Functions.totalmin)
+                TestFunctions.totalsec = 0
+                TestFunctions.totalmin = TestFunctions.totalsec / 60
+                TestFunctions.totalmin = math.floor(TestFunctions.totalmin)
 
         except Exception as exc: 
-            Functions.WriteLog(exc)
+            TestFunctions.WriteLog(exc)
 
     
 
