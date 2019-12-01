@@ -2,6 +2,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/Ned84/BreaktimeWatch?color=blue&style=plastic)](https://github.com/Ned84/BreaktimeWatch/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/Ned84/BreaktimeWatch?style=plastic)](https://github.com/Ned84/BreaktimeWatch/issues)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2F%2FNed84%2FBreaktimeWatch%2Fbadge&style=plastic)](https://actions-badge.atrox.dev//Ned84/BreaktimeWatch/goto)
 
 Program to track breaktimes (coffe- or smokebreak) during workhours. 
 
