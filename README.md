@@ -12,6 +12,7 @@ Program to track breaktimes (coffe- or smokebreak) during workhours.
 * [Install](#install)
   * [Build executable from .py](#build-executable-from-py)
 * [Support](#support)
+* [Get my Public Key](#get-my-public-key)
 
 ## Description
 
@@ -56,5 +57,9 @@ pyinstaller --windowed BreaktimeWatch_GUI.py
 ## Support
 
 If you require help or if you have suggestions please refer to the [Issue section](https://github.com/Ned84/BreaktimeWatch/issues).
+
+## Get my Public Key
+
+Get my public key at [Keybase](https://keybase.io/ned84).
 
 
