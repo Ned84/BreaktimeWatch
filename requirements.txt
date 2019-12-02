@@ -1,3 +1,6 @@
 PyInstaller==3.5
 PyQt5==5.13.1
 PyQt5-sip==4.19.19
+pytest==5.1.2
+pytest-faulthandler==2.0.1
+pytest-qt==3.2.2
