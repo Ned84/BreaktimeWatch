@@ -15,7 +15,7 @@ jobs:
                 name: install dependencies
                 command: | 
                     pip install -r requirements.txt
-                    pipenv install
+                
             
            
             - run: echo 'Hello, Windows'
