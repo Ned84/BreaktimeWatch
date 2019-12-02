@@ -39,7 +39,7 @@ class Functions(object):
         dtwithoutmill = dt.replace(microsecond=0)
         Functions.total = dtwithoutmill
 
-    def test_GetTime():
+    def GetTime():
         dt = datetime.now()
         dtwithoutmill = dt.replace(microsecond=0)
         print(dtwithoutmill)
