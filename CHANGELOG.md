@@ -1,5 +1,8 @@
 # BreaktimeWatch Changelog
 
+## V1.1
+Added MenuStrip "About"
+
 ## V1.0
 Changed repo status from private to public
 

@@ -29,6 +29,8 @@ from datetime import datetime
 import json
 import math
 
+version = "1.1"
+
 
 
 class Ui_BreaktimeWatchGUI(object):
@@ -65,9 +67,9 @@ class Ui_BreaktimeWatchGUI(object):
 
     def setupUi(self, BreaktimeWatchGUI):
         BreaktimeWatchGUI.setObjectName("BreaktimeWatchGUI")
-        BreaktimeWatchGUI.resize(411, 330)
-        BreaktimeWatchGUI.setMinimumSize(QtCore.QSize(411, 330))
-        BreaktimeWatchGUI.setMaximumSize(QtCore.QSize(411, 330))
+        BreaktimeWatchGUI.resize(411, 355)
+        BreaktimeWatchGUI.setMinimumSize(QtCore.QSize(411, 355))
+        BreaktimeWatchGUI.setMaximumSize(QtCore.QSize(411, 355))
         BreaktimeWatchGUI.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/resources/background.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -124,6 +126,17 @@ class Ui_BreaktimeWatchGUI(object):
         self.frame.raise_()
         self.frame_2.raise_()
         BreaktimeWatchGUI.setCentralWidget(self.centralwidget)
+
+        self.menuBar = QtWidgets.QMenuBar(BreaktimeWatchGUI)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 411, 26))
+        self.menuBar.setObjectName("menuBar")
+        self.menuHelp = QtWidgets.QMenu(self.menuBar)
+        self.menuHelp.setObjectName("menuHelp")
+        BreaktimeWatchGUI.setMenuBar(self.menuBar)
+        self.actionAbout = QtWidgets.QAction(BreaktimeWatchGUI)
+        self.actionAbout.setObjectName("actionAbout")
+        self.menuHelp.addAction(self.actionAbout)
+        self.menuBar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(BreaktimeWatchGUI)
         QtCore.QMetaObject.connectSlotsByName(BreaktimeWatchGUI)
@@ -191,8 +204,15 @@ class Ui_BreaktimeWatchGUI(object):
                 btwf.Functions.totalmin = btwf.Functions.totalsec / 60
                 btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
                 self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
-          
-            
+
+        @pyqtSlot()
+        def OpenDialog(): 
+            self.window = QtWidgets.QDialog()
+            self.ui = Ui_DialogAbout()
+            self.ui.setupUi(self.window)
+            self.window.show()
+
+  
         self.startButton.clicked.connect(btwf.Functions.Start)
         self.startButton.clicked.connect(ShowWatch)
 
@@ -206,6 +226,7 @@ class Ui_BreaktimeWatchGUI(object):
 
         self.minTextbox.blockCountChanged.connect(EditTimeValue)
 
+        self.actionAbout.triggered.connect(OpenDialog)
 
 
 
@@ -216,6 +237,64 @@ class Ui_BreaktimeWatchGUI(object):
         self.totallabel.setText(_translate("BreaktimeWatchGUI", "<html><head/><body><p><span style=\" font-size:11pt;\">Total</span></p></body></html>"))
         self.startButton.setText(_translate("BreaktimeWatchGUI", "Start"))
         self.stopButton.setText(_translate("BreaktimeWatchGUI", "Stop"))
+        self.menuHelp.setTitle(_translate("BreaktimeWatchGUI", "Help"))
+        self.actionAbout.setText(_translate("BreaktimeWatchGUI", "About"))
+
+class Ui_DialogAbout(object):
+    def setupUi(self, DialogAbout):
+        DialogAbout.setObjectName("DialogAbout")
+        DialogAbout.resize(459, 240)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/resources/Logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        DialogAbout.setWindowIcon(icon)
+        DialogAbout.setStyleSheet("")
+        self.OKButton = QtWidgets.QPushButton(DialogAbout)
+        self.OKButton.setGeometry(QtCore.QRect(350, 200, 93, 28))
+        self.OKButton.setStyleSheet("")
+        self.OKButton.setObjectName("OKButton")
+        self.frame = QtWidgets.QFrame(DialogAbout)
+        self.frame.setGeometry(QtCore.QRect(0, 50, 151, 111))
+        self.frame.setStyleSheet("image: url(:/resources/background.png);")
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.label = QtWidgets.QLabel(DialogAbout)
+        self.label.setGeometry(QtCore.QRect(170, 60, 301, 131))
+        font = QtGui.QFont()
+        font.setFamily("MS Shell Dlg 2")
+        font.setPointSize(8)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.label_2 = QtWidgets.QLabel(DialogAbout)
+        self.label_2.setGeometry(QtCore.QRect(170, 10, 161, 41))
+        font = QtGui.QFont()
+        font.setFamily("MS Sans Serif")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
+
+        self.retranslateUi(DialogAbout)
+        QtCore.QMetaObject.connectSlotsByName(DialogAbout)
+
+        self.OKButton.clicked.connect(DialogAbout.close)
+
+    def retranslateUi(self, DialogAbout):
+        _translate = QtCore.QCoreApplication.translate
+        DialogAbout.setWindowTitle(_translate("DialogAbout", "About BreaktimeWatch"))
+        self.OKButton.setText(_translate("DialogAbout", "OK"))
+        self.label.setText(_translate("DialogAbout", "Version: "+ version +"\n"
+"\n"
+"Program to track breaktimes\n"
+"(coffe- or smokebreak) during\n"
+"workhours.\n"
+"\n"
+"Copyright (C) 2019  Ned84\n"
+"ned84@protonmail.com"))
+        self.label_2.setText(_translate("DialogAbout", "BreaktimeWatch"))
+
+
 import Resources_rc
 
 
@@ -227,3 +306,6 @@ if __name__ == "__main__":
     ui.setupUi(BreaktimeWatchGUI)
     BreaktimeWatchGUI.show()
     sys.exit(app.exec_())
+
+
+
