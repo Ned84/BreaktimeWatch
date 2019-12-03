@@ -55,7 +55,7 @@ class Ui_BreaktimeWatchGUI(object):
             file.close()
 
         daynow = datetime.now().strftime("%d-%m, %Y")
-        btwf.TestFunctions.GetTotalFromJson(daynow)
+        btwf.TestFunctions.test_GetTotalFromJson(daynow)
         btwf.TestFunctions.totalmin = btwf.TestFunctions.totalsec / 60
         btwf.TestFunctions.totalmin = math.floor(btwf.TestFunctions.totalmin)
 
@@ -153,7 +153,7 @@ class Ui_BreaktimeWatchGUI(object):
         @pyqtSlot()
         def ChangeSelectedDate(): 
             daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
-            btwf.TestFunctions.GetTotalFromJson(daychosen)
+            btwf.TestFunctions.test_GetTotalFromJson(daychosen)
             self.minTextbox.setPlainText("{0}".format(btwf.TestFunctions.totalmin))
 
         @pyqtSlot()
@@ -163,7 +163,7 @@ class Ui_BreaktimeWatchGUI(object):
                 self.calendarWidget.setEnabled(False)
                 self.calendarWidget.setSelectedDate(datetime.now())
                 daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
-                btwf.TestFunctions.GetTotalFromJson(daychosen)
+                btwf.TestFunctions.test_GetTotalFromJson(daychosen)
                 btwf.TestFunctions.totalmin = btwf.TestFunctions.totalsec / 60
                 btwf.TestFunctions.totalmin = math.floor(btwf.TestFunctions.totalmin)
                 self.minTextbox.setPlainText("{0}".format(btwf.TestFunctions.totalmin))
@@ -185,9 +185,9 @@ class Ui_BreaktimeWatchGUI(object):
                 timechosen = int("{0}".format(self.minTextbox.toPlainText()))
                 self.minTextbox.setPlainText("{0}".format(timechosen))
                 timechosen = timechosen * 60
-                btwf.TestFunctions.WriteTimeToJson(daychosen,timechosen)
+                btwf.TestFunctions.test_WriteTimeToJson(self, daychosen, timechosen)
             else:
-                btwf.TestFunctions.GetTotalFromJson(daychosen)
+                btwf.TestFunctions.test_GetTotalFromJson(daychosen)
                 btwf.TestFunctions.totalmin = btwf.TestFunctions.totalsec / 60
                 btwf.TestFunctions.totalmin = math.floor(btwf.TestFunctions.totalmin)
                 self.minTextbox.setPlainText("{0}".format(btwf.TestFunctions.totalmin))

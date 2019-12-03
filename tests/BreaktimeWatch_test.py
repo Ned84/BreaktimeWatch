@@ -39,9 +39,6 @@ class TestFunctions(object):
     diffsec = 0
     selecteddate = datetime.now()
 
-
-    
-
     def test_GetTime(self):
         dt = datetime.now()
         dtwithoutmill = dt.replace(microsecond=0)
@@ -52,7 +49,7 @@ class TestFunctions(object):
         InitClass.testInit()
         TestFunctions.time1 = TestFunctions.test_GetTime(self)
         daynow = datetime.now().strftime("%d-%m, %Y")
-        TestFunctions.GetTotalFromJson(daynow)
+        TestFunctions.test_GetTotalFromJson(daynow)
 
 
     def test_Stop(self):
@@ -60,7 +57,7 @@ class TestFunctions(object):
         TestFunctions.test_CalcDiff(self)
 
         daynow = datetime.now().strftime("%d-%m, %Y")
-        TestFunctions.WriteTimeToJson(daynow,TestFunctions.totalsec)
+        TestFunctions.test_WriteTimeToJson(self, daynow, TestFunctions.totalsec)
 
         
     def test_CalcDiff(self): 
@@ -76,7 +73,7 @@ class TestFunctions(object):
         except Exception as exc: 
             TestFunctions.test_WriteLog(exc)
 
-    def WriteTimeToJson(date,totalsec):
+    def test_WriteTimeToJson(self, date, totalsec):
         try:
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "r")
             json_array = json.load(file)
@@ -100,7 +97,7 @@ class TestFunctions(object):
         except Exception as exc: 
             TestFunctions.test_WriteLog(exc)
 
-    def GetTotalFromJson(date):
+    def test_GetTotalFromJson(date):
         try:
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON')
             json_array = json.load(file)
