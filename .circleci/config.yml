@@ -39,6 +39,13 @@ jobs:
             pip install --upgrade pip
             pip install -r requirements.txt
             pip install pytest
+            
+      -run: 
+          name: create directory
+          command: |
+            mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch
+            mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch\TimeData
+            mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch\Logfiles
 
       - save_cache:
           paths:
