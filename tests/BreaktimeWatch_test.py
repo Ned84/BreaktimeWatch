@@ -42,7 +42,7 @@ class TestFunctions(object):
 
     
 
-    def GetTime():
+    def test_GetTime():
         dt = datetime.now()
         dtwithoutmill = dt.replace(microsecond=0)
         print(dtwithoutmill)
@@ -50,13 +50,13 @@ class TestFunctions(object):
 
     def test_Start(self):
         InitClass.testInit()
-        TestFunctions.time1 = TestFunctions.GetTime()
+        TestFunctions.time1 = TestFunctions.test_GetTime()
         daynow = datetime.now().strftime("%d-%m, %Y")
-        TestFunctions.GetTotalFromJson(daynow)
+        TestFunctions.test_GetTotalFromJson(daynow)
 
 
     def test_Stop(self):
-        TestFunctions.time2 = TestFunctions.GetTime()
+        TestFunctions.time2 = TestFunctions.test_GetTime()
         TestFunctions.test_CalcDiff(self)
 
         daynow = datetime.now().strftime("%d-%m, %Y")
@@ -74,11 +74,12 @@ class TestFunctions(object):
             print("totalsec = {0}".format(TestFunctions.totalsec))
             print("totalmin = {0}".format(TestFunctions.totalmin))
         except Exception as exc: 
-            TestFunctions.WriteLog(exc)
+            TestFunctions.test_WriteLog(exc)
 
-    def WriteTimeToJson(date,totalsec):
+    def test_WriteTimeToJson(date,totalsec):
         try:
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "r")
+            file = open(os.getenv('home') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "r")
             json_array = json.load(file)
             date_list = []
 
@@ -93,16 +94,18 @@ class TestFunctions(object):
             print("JSON = \n\r       {0}".format(date_list))
             file.close()
 
-            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "w")
+            #file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "w")
+            file = open(os.getenv('home') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "w")
             json.dump(date_list, file, indent=1, sort_keys=True)
             file.close()
 
         except Exception as exc: 
             TestFunctions.WriteLog(exc)
 
-    def GetTotalFromJson(date):
+    def test_GetTotalFromJson(date):
         try:
-            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON')
+            #file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON')
+            file = open(os.getenv('home') + '\\BreaktimeWatch\\TimeData\\Data.JSON')
             json_array = json.load(file)
             date_list = []
             found = False
@@ -120,7 +123,8 @@ class TestFunctions(object):
             file.close()
 
             if found == False:
-                file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "w+")
+                #file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "w+")
+                file = open(os.getenv('home') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "w+")
                 date_list.append({"date": date,"totaltime": 0})
                 json.dump(date_list,file, indent=1, sort_keys=True)
                 file.close()
@@ -135,14 +139,16 @@ class TestFunctions(object):
 
     def WriteLog(exc):
         #logfile = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"a")
-        #dt = datetime.now()
-        #dtwithoutmill = dt.replace(microsecond=0)
-        #logfile.write("{0}".format(dtwithoutmill))
-        #logfile.write(": ")
-        #logfile.write("{0}".format(sys.exc_info()[0]))
-        ##logfile.write(" -----> ")
-        #logfile.write("{0}".format(exc))
-      #  logfile.write("\n\r")
-      #  logfile.close()
-     #   print(sys.exc_info()[0])
+        logfile = open(os.getenv('home') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt', "a")
+        
+        dt = datetime.now()
+        dtwithoutmill = dt.replace(microsecond=0)
+        logfile.write("{0}".format(dtwithoutmill))
+        logfile.write(": ")
+        logfile.write("{0}".format(sys.exc_info()[0]))
+        logfile.write(" -----> ")
+        logfile.write("{0}".format(exc))
+        logfile.write("\n\r")
+        logfile.close()
+        print(sys.exc_info()[0])
         print(exc)

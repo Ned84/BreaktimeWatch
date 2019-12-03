@@ -55,7 +55,7 @@ class Ui_BreaktimeWatchGUI(object):
             file.close()
 
         daynow = datetime.now().strftime("%d-%m, %Y")
-        btwf.TestFunctions.GetTotalFromJson(daynow)
+        btwf.TestFunctions.test_GetTotalFromJson(daynow)
         btwf.TestFunctions.totalmin = btwf.TestFunctions.totalsec / 60
         btwf.TestFunctions.totalmin = math.floor(btwf.TestFunctions.totalmin)
 
