@@ -39,20 +39,20 @@ class Functions(object):
         dtwithoutmill = dt.replace(microsecond=0)
         Functions.total = dtwithoutmill
 
-    def GetTime():
+    def GetTime(self):
         dt = datetime.now()
         dtwithoutmill = dt.replace(microsecond=0)
         print(dtwithoutmill)
         return dtwithoutmill
 
-    def Start():
-        Functions.time1 = Functions.GetTime()
+    def Start(self):
+        Functions.time1 = Functions.GetTime(self)
         daynow = datetime.now().strftime("%d-%m, %Y")
         Functions.GetTotalFromJson(daynow)
 
 
-    def Stop():
-        Functions.time2 = Functions.GetTime()
+    def Stop(self):
+        Functions.time2 = Functions.GetTime(self)
         Functions.CalcDiff()
 
         daynow = datetime.now().strftime("%d-%m, %Y")
