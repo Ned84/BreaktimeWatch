@@ -176,7 +176,7 @@ class Ui_BreaktimeWatchGUI(object):
 
         @pyqtSlot()
         def EditTimeValue(): 
-            date = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
+            daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
             
             timechosenstring = ("{0}".format(self.minTextbox.toPlainText()))
             timechosenstring = timechosenstring.rstrip()
@@ -184,7 +184,7 @@ class Ui_BreaktimeWatchGUI(object):
                 timechosen = int("{0}".format(self.minTextbox.toPlainText()))
                 self.minTextbox.setPlainText("{0}".format(timechosen))
                 timechosen = timechosen * 60
-                btwf.TestFunctions.WriteTimeToJson(self, date, timechosen)
+                btwf.TestFunctions.WriteTimeToJson(self, daychosen, timechosen)
             else:
                 btwf.TestFunctions.test_GetTotalFromJson(daychosen)
                 btwf.TestFunctions.totalmin = btwf.TestFunctions.totalsec / 60
