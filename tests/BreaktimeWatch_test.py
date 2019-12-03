@@ -139,7 +139,7 @@ class TestFunctions(object):
 
     def WriteLog(exc):
         #logfile = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"a")
-        logfile = open(os.getenv('home') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt', "a")
+        logfile = open('\\home' + '\\BreaktimeWatch\\Logfiles\\btwlog.txt', "a")
         
         dt = datetime.now()
         dtwithoutmill = dt.replace(microsecond=0)
