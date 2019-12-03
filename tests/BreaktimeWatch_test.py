@@ -56,8 +56,8 @@ class TestFunctions(object):
         TestFunctions.time2 = TestFunctions.test_GetTime(self)
         TestFunctions.test_CalcDiff(self)
 
-        daynow = datetime.now().strftime("%d-%m, %Y")
-        TestFunctions.test_WriteTimeToJson(self, daynow, TestFunctions.totalsec)
+        date = datetime.now().strftime("%d-%m, %Y")
+        TestFunctions.WriteTimeToJson(self, date, TestFunctions.totalsec)
 
         
     def test_CalcDiff(self): 
@@ -73,7 +73,7 @@ class TestFunctions(object):
         except Exception as exc: 
             TestFunctions.test_WriteLog(exc)
 
-    def test_WriteTimeToJson(self, date, totalsec):
+    def WriteTimeToJson(self, date, totalsec):
         try:
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "r")
             json_array = json.load(file)

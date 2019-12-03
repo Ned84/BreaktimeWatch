@@ -43,7 +43,6 @@ class Ui_BreaktimeWatchGUI(object):
         if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles') == False:
             os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles')
            
-
         if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json') == False:
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json',"w+")
             data = [{"date": "November 01, 1984","totaltime": 6013}]
@@ -177,7 +176,7 @@ class Ui_BreaktimeWatchGUI(object):
 
         @pyqtSlot()
         def EditTimeValue(): 
-            daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
+            date = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
             
             timechosenstring = ("{0}".format(self.minTextbox.toPlainText()))
             timechosenstring = timechosenstring.rstrip()
@@ -185,7 +184,7 @@ class Ui_BreaktimeWatchGUI(object):
                 timechosen = int("{0}".format(self.minTextbox.toPlainText()))
                 self.minTextbox.setPlainText("{0}".format(timechosen))
                 timechosen = timechosen * 60
-                btwf.TestFunctions.test_WriteTimeToJson(self, daychosen, timechosen)
+                btwf.TestFunctions.WriteTimeToJson(self, date, timechosen)
             else:
                 btwf.TestFunctions.test_GetTotalFromJson(daychosen)
                 btwf.TestFunctions.totalmin = btwf.TestFunctions.totalsec / 60
