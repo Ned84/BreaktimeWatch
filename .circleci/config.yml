@@ -2,13 +2,17 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.2.0
+
 jobs:
   build:
-    docker:
+    executor: win/default
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.6.1
+      
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
