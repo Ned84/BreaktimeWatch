@@ -30,7 +30,7 @@ jobs:
         mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch
         mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch\TimeData
         mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch\Logfiles
-        type nul > C:\Users\runneradmin\AppData\Local\BreaktimeWatch\Logfiles\btwlog.txt.txt
+        
     
       
     - name: Test with pytest
