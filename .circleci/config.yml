@@ -65,7 +65,6 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python tests\BreaktimeWatch_GUI_test.py test
             pytest
 
       - store_artifacts:
