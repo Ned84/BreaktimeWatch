@@ -44,9 +44,10 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-          
-      - name: create directory 
-        run: |
+                 
+      -run: 
+        name: create directory
+        command: |
         mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch
         mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch\TimeData
         mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch\Logfiles
