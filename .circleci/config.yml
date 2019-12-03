@@ -30,6 +30,8 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            python3 -m venv venv
+            . venv/bin/activate
             pip install --upgrade pip
             pip install -r requirements.txt
 
@@ -47,7 +49,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python BreaktimeWatch/BreaktimeWatch_GUI.py test
+            python tests/BreaktimeWatch_GUI_test.py test
 
       - store_artifacts:
           path: test-reports
