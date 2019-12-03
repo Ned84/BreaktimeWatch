@@ -50,9 +50,9 @@ jobs:
       - run: 
           name: create directory
           command: |
-            mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch
-            mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch\TimeData
-            mkdir C:\Users\runneradmin\AppData\Local\BreaktimeWatch\Logfiles
+            mkdir C:\Users\circleci\AppData\Local\BreaktimeWatch
+            mkdir C:\Users\circleci\AppData\Local\BreaktimeWatch\TimeData
+            mkdir C:\Users\circleci\AppData\Local\BreaktimeWatch\Logfiles
                  
      
 
