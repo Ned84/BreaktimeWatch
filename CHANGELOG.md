@@ -1,5 +1,8 @@
 # BreaktimeWatch Changelog
 
+## V1.2
+Changed GUI Style. Added Label
+
 ## V1.1
 Added MenuStrip "About"
 

@@ -29,7 +29,7 @@ from datetime import datetime
 import json
 import math
 
-version = "1.1"
+version = "1.2"
 
 
 
@@ -66,10 +66,11 @@ class Ui_BreaktimeWatchGUI(object):
 
 
     def setupUi(self, BreaktimeWatchGUI):
+        
         BreaktimeWatchGUI.setObjectName("BreaktimeWatchGUI")
-        BreaktimeWatchGUI.resize(411, 355)
-        BreaktimeWatchGUI.setMinimumSize(QtCore.QSize(411, 355))
-        BreaktimeWatchGUI.setMaximumSize(QtCore.QSize(411, 355))
+        BreaktimeWatchGUI.resize(425, 355)
+        BreaktimeWatchGUI.setMinimumSize(QtCore.QSize(425, 355))
+        BreaktimeWatchGUI.setMaximumSize(QtCore.QSize(425, 355))
         BreaktimeWatchGUI.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/resources/background.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -82,11 +83,12 @@ class Ui_BreaktimeWatchGUI(object):
         self.editButton1.setObjectName("editButton1")
         self.totallabel = QtWidgets.QLabel(self.centralwidget)
         self.totallabel.setEnabled(True)
-        self.totallabel.setGeometry(QtCore.QRect(5, 254, 44, 21))
+        self.totallabel.setGeometry(QtCore.QRect(115, 259, 44, 21))
         self.totallabel.setObjectName("totallabel")
+        self.totallabel.setFont(QtGui.QFont("Arial", 11))
         self.calendarWidget = QtWidgets.QCalendarWidget(self.centralwidget)
         self.calendarWidget.setEnabled(False)
-        self.calendarWidget.setGeometry(QtCore.QRect(10, 10, 392, 236))
+        self.calendarWidget.setGeometry(QtCore.QRect(15, 10, 392, 236))
         self.calendarWidget.setStyleSheet("color: rgb(0, 0, 0);")
         self.calendarWidget.setGridVisible(False)
         self.calendarWidget.setObjectName("calendarWidget")
@@ -98,26 +100,33 @@ class Ui_BreaktimeWatchGUI(object):
         self.stopButton.setObjectName("stopButton")
         self.stopButton.setEnabled(False)
         self.minTextbox = QtWidgets.QPlainTextEdit(self.centralwidget)
-        self.minTextbox.setGeometry(QtCore.QRect(50, 250, 104, 30))
+        self.minTextbox.setGeometry(QtCore.QRect(160, 254, 104, 30))
         self.minTextbox.setReadOnly(True)
         self.minTextbox.setObjectName("minTextbox")
         self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
         self.minTextbox.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.minTextbox.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.minTextbox.setFont(QtGui.QFont("Arial", 11))
+        self.minTextbox.hide()
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(165, 254, 104, 30))
+        self.label.setObjectName("minTextLabel")
+        self.label.setText("{0}".format(btwf.Functions.totalmin))
+        self.label.setFont(QtGui.QFont("Arial", 11))
+        self.label.setText("{0}".format(btwf.Functions.totalmin))
         self.frame = QtWidgets.QFrame(self.centralwidget)
-        self.frame.setGeometry(QtCore.QRect(280, 230, 151, 111))
+        self.frame.setGeometry(QtCore.QRect(290, 230, 151, 111))
         self.frame.setStyleSheet("image: url(:/resources/background.png);")
-        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
-        self.frame_2.setGeometry(QtCore.QRect(160, 250, 30, 30))
+        self.frame_2.setGeometry(QtCore.QRect(270, 255, 30, 30))
         self.frame_2.setStyleSheet("image: url(:/resources/stopwatch.svg);")
-        self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
         self.frame_2.hide()
         self.minTextbox.raise_()
+        self.label.raise_()
         self.editButton1.raise_()
         self.totallabel.raise_()
         self.calendarWidget.raise_()
@@ -144,10 +153,7 @@ class Ui_BreaktimeWatchGUI(object):
         @pyqtSlot()
         def WriteMinInTextbox():
             self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
-
-        @pyqtSlot()
-        def ProgressbarStart():     
-            self.progressBar.setValue(btwf.Functions.completed)
+            self.label.setText("{0}".format(btwf.Functions.totalmin))
 
         @pyqtSlot()
         def ShowWatch():     
@@ -168,10 +174,13 @@ class Ui_BreaktimeWatchGUI(object):
             daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
             btwf.Functions.GetTotalFromJson(daychosen)
             self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
+            self.label.setText("{0}".format(btwf.Functions.totalmin))
 
         @pyqtSlot()
         def EditOnOff():         
             if self.minTextbox.isReadOnly() == False:
+                self.minTextbox.hide()
+                self.label.show()
                 self.minTextbox.setReadOnly(True)
                 self.calendarWidget.setEnabled(False)
                 self.calendarWidget.setSelectedDate(datetime.now())
@@ -180,9 +189,12 @@ class Ui_BreaktimeWatchGUI(object):
                 btwf.Functions.totalmin = btwf.Functions.totalsec / 60
                 btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
                 self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
+                self.label.setText("{0}".format(btwf.Functions.totalmin))
                 self.startButton.setEnabled(True)
                 self.stopButton.setEnabled(False)
             else:
+                self.minTextbox.show()
+                self.label.hide()
                 self.minTextbox.setReadOnly(False)
                 self.calendarWidget.setEnabled(True)
                 self.startButton.setEnabled(False)
@@ -197,6 +209,7 @@ class Ui_BreaktimeWatchGUI(object):
             if timechosenstring.isdigit() :
                 timechosen = int("{0}".format(self.minTextbox.toPlainText()))
                 self.minTextbox.setPlainText("{0}".format(timechosen))
+                self.label.setText("{0}".format(timechosen))
                 timechosen = timechosen * 60
                 btwf.Functions.WriteTimeToJson(daychosen,timechosen)
             else:
@@ -204,6 +217,7 @@ class Ui_BreaktimeWatchGUI(object):
                 btwf.Functions.totalmin = btwf.Functions.totalsec / 60
                 btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
                 self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
+                self.label.setText("{0}".format(btwf.Functions.totalmin))
 
         @pyqtSlot()
         def OpenDialog(): 
@@ -255,7 +269,6 @@ class Ui_DialogAbout(object):
         self.frame = QtWidgets.QFrame(DialogAbout)
         self.frame.setGeometry(QtCore.QRect(0, 50, 151, 111))
         self.frame.setStyleSheet("image: url(:/resources/background.png);")
-        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         self.label = QtWidgets.QLabel(DialogAbout)
@@ -300,7 +313,9 @@ import Resources_rc
 
 if __name__ == "__main__":
     import sys
+    
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyle('Fusion')
     BreaktimeWatchGUI = QtWidgets.QMainWindow()
     ui = Ui_BreaktimeWatchGUI()
     ui.setupUi(BreaktimeWatchGUI)
