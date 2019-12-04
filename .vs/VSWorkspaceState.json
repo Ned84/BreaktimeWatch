@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\.github\\workflows",
     "\\tests"
   ],
-  "SelectedNode": "\\tests\\BreaktimeWatch_test.py",
+  "SelectedNode": "\\tests\\BreaktimeWatch_GUI_test.py",
   "PreviewInSolutionExplorer": false
 }
