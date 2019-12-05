@@ -229,11 +229,15 @@ class Ui_BreaktimeWatchGUI(object):
 
         
 
-        link = "https://github.com/Ned84/BreaktimeWatch/tags"
+        link = "https://github.com/Ned84/BreaktimeWatch/blob/master/Version.md"
      
-        f = request.urlopen(link)
-        myfile = f.read()
-        print(myfile)
+        url = request.urlopen(link)
+        readurl = url.read()
+        text = readurl.decode(encoding='utf-8',errors='ignore')
+        stringindex = text.find("BreaktimeWatchVersion") 
+
+        if stringindex != -1:
+            versionnew = text[stringindex:stringindex + 4]
 
   
         self.startButton.clicked.connect(btwf.Functions.Start)
