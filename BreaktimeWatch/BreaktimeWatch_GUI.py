@@ -28,6 +28,7 @@ from os import path
 from datetime import datetime
 import json
 import math
+from urllib import request
 
 version = "1.2"
 
@@ -225,6 +226,14 @@ class Ui_BreaktimeWatchGUI(object):
             self.ui = Ui_DialogAbout()
             self.ui.setupUi(self.window)
             self.window.show()
+
+        
+
+        link = "https://github.com/Ned84/BreaktimeWatch/tags"
+     
+        f = request.urlopen(link)
+        myfile = f.read()
+        print(myfile)
 
   
         self.startButton.clicked.connect(btwf.Functions.Start)
