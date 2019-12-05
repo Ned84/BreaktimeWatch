@@ -31,6 +31,7 @@ import math
 from urllib import request
 
 version = "1.2"
+updateavail = False
 
 
 
@@ -61,6 +62,21 @@ class Ui_BreaktimeWatchGUI(object):
         btwf.Functions.GetTotalFromJson(daynow)
         btwf.Functions.totalmin = btwf.Functions.totalsec / 60
         btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
+
+        link = "https://github.com/Ned84/BreaktimeWatch/blob/master/Version.md"
+     
+        url = request.urlopen(link)
+        readurl = url.read()
+        text = readurl.decode(encoding='utf-8',errors='ignore')
+        stringindex = text.find("BreaktimeWatchVersion") 
+
+        if stringindex != -1:
+            versionnew = text[stringindex + 23:stringindex + 26]
+            versionnew = versionnew.replace('_','.')
+
+        if version != versionnew:
+            print("Update available.")
+            updateavail = True
 
         return super().__init__(*args, **kwargs)
    
@@ -227,17 +243,6 @@ class Ui_BreaktimeWatchGUI(object):
             self.ui.setupUi(self.window)
             self.window.show()
 
-        
-
-        link = "https://github.com/Ned84/BreaktimeWatch/blob/master/Version.md"
-     
-        url = request.urlopen(link)
-        readurl = url.read()
-        text = readurl.decode(encoding='utf-8',errors='ignore')
-        stringindex = text.find("BreaktimeWatchVersion") 
-
-        if stringindex != -1:
-            versionnew = text[stringindex:stringindex + 4]
 
   
         self.startButton.clicked.connect(btwf.Functions.Start)
