@@ -34,31 +34,58 @@ version = "1.2"
 class Ui_BreaktimeWatchGUI(object):
 
     def __init__(self, *args, **kwargs):
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch') == False:
-            os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch')
+        try:
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch') == False:
+                os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch')
 
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData') == False:
-            os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData')
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData') == False:
+                os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData')
 
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles') == False:
-            os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles')
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles') == False:
+                os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles')
            
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json') == False:
-            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json',"w+")
-            data = [{"date": "November 01, 1984","totaltime": 6013}]
-            json.dump(data,file, indent=1, sort_keys=True)
-            file.close()
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json') == False:
+                file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json',"w+")
+                data = [{"date": "November 01, 1984","totaltime": 6013}]
+                json.dump(data,file, indent=1, sort_keys=True)
+                file.close()
 
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt') == False:
-            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"w+")
-            file.close()
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt') == False:
+                file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"w+")
+                file.close()
 
-        daynow = datetime.now().strftime("%d-%m, %Y")
-        btwf.TestFunctions.test_GetTotalFromJson(daynow)
-        btwf.TestFunctions.totalmin = btwf.TestFunctions.totalsec / 60
-        btwf.TestFunctions.totalmin = math.floor(btwf.TestFunctions.totalmin)
+            daynow = datetime.now().strftime("%d-%m, %Y")
+            btwf.TestFunctions.test_GetTotalFromJson(daynow)
+            btwf.TestFunctions.totalmin = btwf.TestFunctions.totalsec / 60
+            btwf.TestFunctions.totalmin = math.floor(btwf.TestFunctions.totalmin)
 
-        return super().__init__(*args, **kwargs)
+        except Exception as exc:
+            Functions.WriteLog(exc)
+
+        try:
+            link = "https://github.com/Ned84/BreaktimeWatch/blob/master/Version.md"
+  
+            url = request.urlopen(link)
+            readurl = url.read()
+            text = readurl.decode(encoding='utf-8',errors='ignore')
+            stringindex = text.find("BreaktimeWatchVersion") 
+
+            if stringindex != -1:
+                Ui_BreaktimeWatchGUI.versionnew = text[stringindex + 23:stringindex + 26]
+                Ui_BreaktimeWatchGUI.versionnew = Ui_BreaktimeWatchGUI.versionnew.replace('_','.')
+
+            if version != Ui_BreaktimeWatchGUI.versionnew:
+                Ui_BreaktimeWatchGUI.serverconnection = True
+                Ui_BreaktimeWatchGUI.updateavail = True
+            else:
+                Ui_BreaktimeWatchGUI.serverconnection = True
+                Ui_BreaktimeWatchGUI.updateavail = False
+
+            return super().__init__(*args, **kwargs)
+
+        except Exception as exc: 
+             Ui_BreaktimeWatchGUI.updateavail = False
+
    
 
 

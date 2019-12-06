@@ -31,7 +31,7 @@ import json
 import math
 import webbrowser
 
-
+version = "1.2"
 
 class Ui_BreaktimeWatchGUI(object):
 
@@ -41,7 +41,7 @@ class Ui_BreaktimeWatchGUI(object):
     updatecnt = 0
 
     def __init__(self, *args, **kwargs):
-        
+        try:
             if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch') == False:
                 os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch')
 
