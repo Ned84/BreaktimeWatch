@@ -74,7 +74,7 @@ class Functions(object):
 
     def WriteTimeToJson(date,totalsec):
         try:
-            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "r")
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.JSON', "r")
             json_array = json.load(file)
             date_list = []
 
@@ -89,7 +89,7 @@ class Functions(object):
             print("JSON = \n\r       {0}".format(date_list))
             file.close()
 
-            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "w")
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.JSON', "w")
             json.dump(date_list, file, indent=1, sort_keys=True)
             file.close()
 
@@ -98,7 +98,7 @@ class Functions(object):
 
     def GetTotalFromJson(date):
         try:
-            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON')
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.JSON')
             json_array = json.load(file)
             date_list = []
             found = False
@@ -116,7 +116,7 @@ class Functions(object):
             file.close()
 
             if found == False:
-                file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "w+")
+                file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.JSON', "w+")
                 date_list.append({"date": date,"totaltime": 0})
                 json.dump(date_list,file, indent=1, sort_keys=True)
                 file.close()
