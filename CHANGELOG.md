@@ -1,7 +1,7 @@
 # BreaktimeWatch Changelog
 
 ## V1.3
-Icon change. Update function added.
+Icon change. Updatefunction added.
 
 ## V1.2
 Changed GUI Style. Added Label

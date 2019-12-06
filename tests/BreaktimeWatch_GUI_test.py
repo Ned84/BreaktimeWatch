@@ -29,7 +29,7 @@ from datetime import datetime
 import json
 import math
 
-
+version = "1.2"
 
 class Ui_BreaktimeWatchGUI(object):
 

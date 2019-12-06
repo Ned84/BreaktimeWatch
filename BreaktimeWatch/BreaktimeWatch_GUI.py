@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSlot
+from urllib import request
 
 import BreaktimeWatch as btwf
 
@@ -28,59 +29,70 @@ from os import path
 from datetime import datetime
 import json
 import math
-from urllib import request
-
-version = "1.2"
-updateavail = False
+import webbrowser
 
 
 
 class Ui_BreaktimeWatchGUI(object):
 
+    updateavail = False
+    serverconnection = False
+    versionnew = ""
+    updatecnt = 0
+
     def __init__(self, *args, **kwargs):
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch') == False:
-            os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch')
+        
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch') == False:
+                os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch')
 
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData') == False:
-            os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData')
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta') == False:
+                os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta')
 
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles') == False:
-            os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles')
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\logfiles') == False:
+                os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\logfiles')
            
 
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json') == False:
-            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.json',"w+")
-            data = [{"date": "November 01, 1984","totaltime": 6013}]
-            json.dump(data,file, indent=1, sort_keys=True)
-            file.close()
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.json') == False:
+                file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.json',"w+")
+                data = [{"date": "November 01, 1984","totaltime": 6013}]
+                json.dump(data,file, indent=1, sort_keys=True)
+                file.close()
 
-        if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt') == False:
-            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"w+")
-            file.close()
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\logfiles\\btwlog.txt') == False:
+                file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\logfiles\\btwlog.txt',"w+")
+                file.close()
 
-        daynow = datetime.now().strftime("%d-%m, %Y")
-        btwf.Functions.GetTotalFromJson(daynow)
-        btwf.Functions.totalmin = btwf.Functions.totalsec / 60
-        btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
+            daynow = datetime.now().strftime("%d-%m, %Y")
+            btwf.Functions.GetTotalFromJson(daynow)
+            btwf.Functions.totalmin = btwf.Functions.totalsec / 60
+            btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
 
-        link = "https://github.com/Ned84/BreaktimeWatch/blob/master/Version.md"
-     
-        url = request.urlopen(link)
-        readurl = url.read()
-        text = readurl.decode(encoding='utf-8',errors='ignore')
-        stringindex = text.find("BreaktimeWatchVersion") 
+        except Exception as exc:
+            Functions.WriteLog(exc)
 
-        if stringindex != -1:
-            versionnew = text[stringindex + 23:stringindex + 26]
-            versionnew = versionnew.replace('_','.')
+        try:
+            link = "https://github.com/Ned84/BreaktimeWatch/blob/master/Version.md"
+  
+            url = request.urlopen(link)
+            readurl = url.read()
+            text = readurl.decode(encoding='utf-8',errors='ignore')
+            stringindex = text.find("BreaktimeWatchVersion") 
 
-        if version != versionnew:
-            print("Update available.")
-            updateavail = True
+            if stringindex != -1:
+                Ui_BreaktimeWatchGUI.versionnew = text[stringindex + 23:stringindex + 26]
+                Ui_BreaktimeWatchGUI.versionnew = Ui_BreaktimeWatchGUI.versionnew.replace('_','.')
 
-        return super().__init__(*args, **kwargs)
-   
+            if version != Ui_BreaktimeWatchGUI.versionnew:
+                Ui_BreaktimeWatchGUI.serverconnection = True
+                Ui_BreaktimeWatchGUI.updateavail = True
+            else:
+                Ui_BreaktimeWatchGUI.serverconnection = True
+                Ui_BreaktimeWatchGUI.updateavail = False
 
+            return super().__init__(*args, **kwargs)
+
+        except Exception as exc: 
+             Ui_BreaktimeWatchGUI.updateavail = False
 
     def setupUi(self, BreaktimeWatchGUI):
         
@@ -161,7 +173,10 @@ class Ui_BreaktimeWatchGUI(object):
         BreaktimeWatchGUI.setMenuBar(self.menuBar)
         self.actionAbout = QtWidgets.QAction(BreaktimeWatchGUI)
         self.actionAbout.setObjectName("actionAbout")
-        self.menuHelp.addAction(self.actionAbout)
+        self.actionUpdate = QtWidgets.QAction(BreaktimeWatchGUI)
+        self.actionUpdate.setObjectName("actionUpdate")
+        self.menuHelp.addAction(self.actionUpdate)
+        self.menuHelp.addAction(self.actionAbout)       
         self.menuBar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(BreaktimeWatchGUI)
@@ -237,16 +252,31 @@ class Ui_BreaktimeWatchGUI(object):
                 self.label.setText("{0}".format(btwf.Functions.totalmin))
 
         @pyqtSlot()
-        def OpenDialog(): 
+        def OpenDialogAbout(): 
             self.window = QtWidgets.QDialog()
             self.ui = Ui_DialogAbout()
             self.ui.setupUi(self.window)
             self.window.show()
 
+        @pyqtSlot()
+        def OpenDialogUpdate(): 
+            self.window = QtWidgets.QDialog()
+            self.ui = Ui_DialogUpdate()
+            self.ui.setupUi(self.window)
+            self.window.show()
 
-  
-        self.startButton.clicked.connect(btwf.Functions.Start)
-        self.startButton.clicked.connect(ShowWatch)
+        @pyqtSlot()
+        def StartButtonPressed():
+            if Ui_BreaktimeWatchGUI.updateavail == False or Ui_BreaktimeWatchGUI.updatecnt == 1:
+                btwf.Functions.Start(self)
+                ShowWatch()
+        
+            if Ui_BreaktimeWatchGUI.updateavail == True and Ui_BreaktimeWatchGUI.updatecnt == 0:
+               OpenDialogUpdate()
+               Ui_BreaktimeWatchGUI.updatecnt = 1
+
+        
+        self.startButton.clicked.connect(StartButtonPressed)
 
         self.stopButton.clicked.connect(btwf.Functions.Stop)
         self.stopButton.clicked.connect(WriteMinInTextbox)
@@ -258,8 +288,9 @@ class Ui_BreaktimeWatchGUI(object):
 
         self.minTextbox.blockCountChanged.connect(EditTimeValue)
 
-        self.actionAbout.triggered.connect(OpenDialog)
+        self.actionAbout.triggered.connect(OpenDialogAbout)
 
+        self.actionUpdate.triggered.connect(OpenDialogUpdate)
 
 
     def retranslateUi(self, BreaktimeWatchGUI):
@@ -271,6 +302,7 @@ class Ui_BreaktimeWatchGUI(object):
         self.stopButton.setText(_translate("BreaktimeWatchGUI", "Stop"))
         self.menuHelp.setTitle(_translate("BreaktimeWatchGUI", "Help"))
         self.actionAbout.setText(_translate("BreaktimeWatchGUI", "About"))
+        self.actionUpdate.setText(_translate("BreaktimeWatchGUI", "Update"))
 
 class Ui_DialogAbout(object):
     def setupUi(self, DialogAbout):
@@ -313,8 +345,8 @@ class Ui_DialogAbout(object):
 
     def retranslateUi(self, DialogAbout):
         _translate = QtCore.QCoreApplication.translate
-        DialogAbout.setWindowTitle(_translate("DialogAbout", "About BreaktimeWatch"))
-        self.OKButton.setText(_translate("DialogAbout", "OK"))
+        DialogAbout.setWindowTitle(_translate("DialogAbout", "About"))
+        self.OKButton.setText(_translate("DialogAbout", "Close"))
         self.label.setText(_translate("DialogAbout", "Version: "+ version +"\n"
 "\n"
 "Program to track breaktimes\n"
@@ -324,6 +356,105 @@ class Ui_DialogAbout(object):
 "Copyright (C) 2019  Ned84\n"
 "ned84@protonmail.com"))
         self.label_2.setText(_translate("DialogAbout", "BreaktimeWatch"))
+
+
+class Ui_DialogUpdate(object):
+    def setupUi(self, DialogUpdate):
+        DialogUpdate.setObjectName("DialogUpdate")
+        DialogUpdate.resize(459, 240)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/resources/Logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        DialogUpdate.setWindowIcon(icon)
+        DialogUpdate.setStyleSheet("")
+        self.OKButton = QtWidgets.QPushButton(DialogUpdate)
+        self.OKButton.setGeometry(QtCore.QRect(350, 200, 93, 28))
+        self.OKButton.setStyleSheet("")
+        self.OKButton.setObjectName("OKButton")
+        self.UpdateButton = QtWidgets.QPushButton(DialogUpdate)
+        self.UpdateButton.setGeometry(QtCore.QRect(250, 200, 93, 28))
+        self.UpdateButton.setStyleSheet("")
+        self.UpdateButton.setObjectName("UpdateButton")
+        self.frame = QtWidgets.QFrame(DialogUpdate)
+        self.frame.setGeometry(QtCore.QRect(0, 50, 151, 111))
+        self.frame.setStyleSheet("image: url(:/resources/BtWbgre.png);")
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.label = QtWidgets.QLabel(DialogUpdate)
+        self.label.setGeometry(QtCore.QRect(170, 60, 301, 131))
+        self.label_3 = QtWidgets.QLabel(DialogUpdate)
+        self.label_3.setGeometry(QtCore.QRect(170, 60, 301, 131))
+        self.label_4 = QtWidgets.QLabel(DialogUpdate)
+        self.label_4.setGeometry(QtCore.QRect(170, 60, 301, 131))
+        font = QtGui.QFont()
+        font.setFamily("MS Shell Dlg 2")
+        font.setPointSize(8)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.label_2 = QtWidgets.QLabel(DialogUpdate)
+        self.label_2.setGeometry(QtCore.QRect(170, 10, 161, 41))
+        font = QtGui.QFont()
+        font.setFamily("MS Sans Serif")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
+
+        self.retranslateUi(DialogUpdate)
+        QtCore.QMetaObject.connectSlotsByName(DialogUpdate)
+
+        @pyqtSlot()
+        def OpenUpdateSite():
+            webbrowser.open('https://github.com/Ned84/BreaktimeWatch/releases') 
+
+        self.OKButton.clicked.connect(DialogUpdate.close)
+
+        self.UpdateButton.clicked.connect(OpenUpdateSite)
+
+    def retranslateUi(self, DialogUpdate):
+        _translate = QtCore.QCoreApplication.translate
+        DialogUpdate.setWindowTitle(_translate("DialogUpdate", "Update BreaktimeWatch"))
+        self.OKButton.setText(_translate("DialogUpdate", "Close"))
+        self.UpdateButton.setText(_translate("DialogUpdate", "Update"))
+        self.label.setText(_translate("DialogUpdate", "Current Version: "+ version +"\n"
+"\n"
+"New Version: "+ Ui_BreaktimeWatchGUI.versionnew +"\n"
+"\n"
+"Do you want to Update\n"
+"this Program?"))
+
+        self.label_3.setText(_translate("DialogUpdate", "No connection to Github."))
+        self.label_3.setFont(QtGui.QFont("Arial", 9))
+
+        self.label_4.setText(_translate("DialogUpdate", "Current Version: "+ version +"\n"
+"\n"
+"New Version: "+ Ui_BreaktimeWatchGUI.versionnew +"\n"
+"\n"
+"No Update available."))
+        self.label_4.setFont(QtGui.QFont("Arial", 9))
+
+        self.label.setFont(QtGui.QFont("Arial", 9))
+        self.label_2.setText(_translate("DialogUpdate", "BreaktimeWatch"))
+
+        if Ui_BreaktimeWatchGUI.serverconnection == False:
+            self.UpdateButton.setEnabled(False)
+            self.label.hide()
+            self.label_4.hide()
+            self.label_3.show()
+        else:
+            if Ui_BreaktimeWatchGUI.updateavail == True:
+                self.UpdateButton.setEnabled(True)
+                self.label.show()
+                self.label_4.hide()
+                self.label_3.hide()
+            else:
+                self.UpdateButton.setEnabled(False)
+                self.label.hide()
+                self.label_4.show()
+                self.label_3.hide()
+
+
+
 
 
 import Resources_rc
