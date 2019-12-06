@@ -52,7 +52,10 @@ Optional Pyinstaller. Infos are [here.](https://www.pyinstaller.org/downloads.ht
 pip install pyinstaller
 ```
 ```
-pyinstaller --windowed BreaktimeWatch_GUI.py
+pip install PyQt5
+```
+```
+pyinstaller --windowed --icon=btwbgr_white_FIz_3.ico --clean --name BreaktimeWatch.py BreaktimeWatch_GUI.py
 ```
 
 ## Support
