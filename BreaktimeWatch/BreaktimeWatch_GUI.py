@@ -48,6 +48,9 @@ class Ui_BreaktimeWatchGUI(object):
             if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta') == False:
                 os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta')
 
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam') == False:
+                os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam')
+
             if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\logfiles') == False:
                 os.mkdir(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\logfiles')
            
@@ -55,6 +58,12 @@ class Ui_BreaktimeWatchGUI(object):
             if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.json') == False:
                 file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.json',"w+")
                 data = [{"date": "November 01, 1984","totaltime": 6013}]
+                json.dump(data,file, indent=1, sort_keys=True)
+                file.close()
+
+            if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json') == False:
+                file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json',"w+")
+                data = [{"version": version,   "workhours/week": "",   "unpaid_breaktime": "",   "time_bfr_break": ""}]
                 json.dump(data,file, indent=1, sort_keys=True)
                 file.close()
 
@@ -164,6 +173,11 @@ class Ui_BreaktimeWatchGUI(object):
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
         self.frame_2.hide()       
+        self.frame_3 = QtWidgets.QFrame(self.tab_2)
+        self.frame_3.setGeometry(QtCore.QRect(290, -10, 151, 111))
+        self.frame_3.setStyleSheet("image: url(:/resources/WorktimeWatch_Logo);")
+        self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_3.setObjectName("frame_3")
         self.minTextbox.raise_()
         self.label.raise_()
         self.editButton1.raise_()
@@ -173,10 +187,13 @@ class Ui_BreaktimeWatchGUI(object):
         self.stopButton.raise_()
         self.frame.raise_()
         self.frame_2.raise_()
+        self.frame_3.raise_()
         BreaktimeWatchGUI.setCentralWidget(self.centralwidget)
         self.menuBar = QtWidgets.QMenuBar(BreaktimeWatchGUI)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 411, 26))
         self.menuBar.setObjectName("menuBar")
+        self.menuEdit = QtWidgets.QMenu(self.menuBar)
+        self.menuEdit.setObjectName("menuEdit")
         self.menuHelp = QtWidgets.QMenu(self.menuBar)
         self.menuHelp.setObjectName("menuHelp")
         BreaktimeWatchGUI.setMenuBar(self.menuBar)
@@ -184,10 +201,14 @@ class Ui_BreaktimeWatchGUI(object):
         self.actionAbout.setObjectName("actionAbout")
         self.actionUpdate = QtWidgets.QAction(BreaktimeWatchGUI)
         self.actionUpdate.setObjectName("actionUpdate")
+        self.actionSettings = QtWidgets.QAction(BreaktimeWatchGUI)
+        self.actionSettings.setObjectName("actionSettings")
         self.menuHelp.addAction(self.actionUpdate)
-        self.menuHelp.addAction(self.actionAbout)       
+        self.menuHelp.addAction(self.actionAbout)      
+        self.menuEdit.addAction(self.actionSettings)
+        self.menuBar.addAction(self.menuEdit.menuAction())
         self.menuBar.addAction(self.menuHelp.menuAction())
-
+        
         self.retranslateUi(BreaktimeWatchGUI)
         QtCore.QMetaObject.connectSlotsByName(BreaktimeWatchGUI)
 
@@ -240,6 +261,7 @@ class Ui_BreaktimeWatchGUI(object):
                 self.calendarWidget.setEnabled(True)
                 self.startButton.setEnabled(False)
                 self.stopButton.setEnabled(False)
+                
 
         @pyqtSlot()
         def EditTimeValue(): 
@@ -275,6 +297,13 @@ class Ui_BreaktimeWatchGUI(object):
             self.window.show()
 
         @pyqtSlot()
+        def OpenDialogSettings(): 
+            self.window = QtWidgets.QDialog()
+            self.ui = Ui_DialogSettings()
+            self.ui.setupUi(self.window)
+            self.window.show()
+
+        @pyqtSlot()
         def StartButtonPressed():
             if Ui_BreaktimeWatchGUI.updateavail == False or Ui_BreaktimeWatchGUI.updatecnt == 1:
                 btwf.Functions.Start(self)
@@ -301,6 +330,8 @@ class Ui_BreaktimeWatchGUI(object):
 
         self.actionUpdate.triggered.connect(OpenDialogUpdate)
 
+        self.actionSettings.triggered.connect(OpenDialogSettings)
+
 
     def retranslateUi(self, BreaktimeWatchGUI):
         _translate = QtCore.QCoreApplication.translate
@@ -309,11 +340,13 @@ class Ui_BreaktimeWatchGUI(object):
         self.totallabel.setText(_translate("BreaktimeWatchGUI", "<html><head/><body><p><span style=\" font-size:11pt;\">Total</span></p></body></html>"))
         self.startButton.setText(_translate("BreaktimeWatchGUI", "Start"))
         self.stopButton.setText(_translate("BreaktimeWatchGUI", "Stop"))
-        self.menuHelp.setTitle(_translate("BreaktimeWatchGUI", "Help"))
+        self.menuEdit.setTitle(_translate("BreaktimeWatchGUI", "Edit"))
+        self.menuHelp.setTitle(_translate("BreaktimeWatchGUI", "Help"))        
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("BreaktimeWatchGUI", "Breaktimewatch"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("BreaktimeWatchGUI", "WorkhourTracker"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("BreaktimeWatchGUI", "WorktimeWatch"))
         self.actionAbout.setText(_translate("BreaktimeWatchGUI", "About"))
         self.actionUpdate.setText(_translate("BreaktimeWatchGUI", "Update"))
+        self.actionSettings.setText(_translate("BreaktimeWatchGUI", "Settings"))
 
 class Ui_DialogAbout(object):
     def setupUi(self, DialogAbout):
@@ -367,7 +400,6 @@ class Ui_DialogAbout(object):
 "Copyright (C) 2019  Ned84\n"
 "ned84@protonmail.com"))
         self.label_2.setText(_translate("DialogAbout", "BreaktimeWatch"))
-
 
 class Ui_DialogUpdate(object):
     def setupUi(self, DialogUpdate):
@@ -464,8 +496,104 @@ class Ui_DialogUpdate(object):
                 self.label_4.show()
                 self.label_3.hide()
 
+class Ui_DialogSettings(object):
 
+    def setupUi(self, DialogSettings):
+        DialogSettings.setObjectName("DialogSettings")
+        DialogSettings.resize(459, 240)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/resources/Logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        DialogSettings.setWindowIcon(icon)
+        DialogSettings.setStyleSheet("")
+        self.OKButton = QtWidgets.QPushButton(DialogSettings)
+        self.OKButton.setGeometry(QtCore.QRect(250, 200, 93, 28))
+        self.OKButton.setStyleSheet("")
+        self.OKButton.setObjectName("OKButton")
+        self.frame = QtWidgets.QFrame(DialogSettings)
+        self.frame.setGeometry(QtCore.QRect(0, 50, 151, 111))
+        self.frame.setStyleSheet("image: url(:/resources/WorktimeWatch_Logo.png);")
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.label_2 = QtWidgets.QLabel(DialogSettings)
+        self.label_2.setGeometry(QtCore.QRect(170, 10, 161, 41))
+        font = QtGui.QFont()
+        font.setFamily("MS Sans Serif")
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
+        self.CancelButton = QtWidgets.QPushButton(DialogSettings)
+        self.CancelButton.setGeometry(QtCore.QRect(350, 200, 93, 28))
+        self.CancelButton.setObjectName("CancelButton")
+        self.label = QtWidgets.QLabel(DialogSettings)
+        self.label.setGeometry(QtCore.QRect(160, 70, 161, 21))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.label.setFont(font)
+        self.label.setObjectName("label")
+        self.label_3 = QtWidgets.QLabel(DialogSettings)
+        self.label_3.setGeometry(QtCore.QRect(160, 100, 161, 21))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.label_3.setFont(font)
+        self.label_3.setObjectName("label_3")
+        self.label_4 = QtWidgets.QLabel(DialogSettings)
+        self.label_4.setGeometry(QtCore.QRect(160, 130, 161, 21))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.label_4.setFont(font)
+        self.label_4.setObjectName("label_4")
+        self.lineEdit = QtWidgets.QLineEdit(DialogSettings)
+        self.lineEdit.setGeometry(QtCore.QRect(330, 70, 113, 22))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.lineEdit.setFont(font)
+        self.lineEdit.setObjectName("lineEdit")
+        self.lineEdit_2 = QtWidgets.QLineEdit(DialogSettings)
+        self.lineEdit_2.setGeometry(QtCore.QRect(330, 100, 113, 22))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.lineEdit_2.setFont(font)
+        self.lineEdit_2.setObjectName("lineEdit_2")
+        self.lineEdit_3 = QtWidgets.QLineEdit(DialogSettings)
+        self.lineEdit_3.setGeometry(QtCore.QRect(330, 130, 113, 22))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        self.lineEdit_3.setFont(font)
+        self.lineEdit_3.setObjectName("lineEdit_3")
 
+        self.retranslateUi(DialogSettings)
+        self.CancelButton.clicked.connect(DialogSettings.close)
+        QtCore.QMetaObject.connectSlotsByName(DialogSettings)
+
+        try: 
+
+            btwf.Functions.GetSettingsFromJson()
+            self.lineEdit.setText(btwf.Functions.paramworkhoursweek)
+            self.lineEdit_2.setText(btwf.Functions.paramunpaid_breaktime)
+            self.lineEdit_3.setText(btwf.Functions.paramtime_bfr_break)
+           
+        except Exception as exc:
+            btwf.Functions.WriteLog(exc)
+
+    def retranslateUi(self, DialogSettings):
+        _translate = QtCore.QCoreApplication.translate
+        DialogSettings.setWindowTitle(_translate("DialogSettings", "About BreaktimeWatch"))
+        self.OKButton.setText(_translate("DialogSettings", "OK"))
+        self.label_2.setText(_translate("DialogSettings", "Settings"))
+        self.CancelButton.setText(_translate("DialogSettings", "Cancel"))
+        self.label.setText(_translate("DialogSettings", "Workhours/Week"))
+        self.label_3.setText(_translate("DialogSettings", "Unpaid breaktime/day"))
+        self.label_4.setText(_translate("DialogSettings", "Worktime before break"))        
+
+        
 
 
 import Resources_rc

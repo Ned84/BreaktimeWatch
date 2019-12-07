@@ -55,7 +55,7 @@ pip install pyinstaller
 pip install PyQt5
 ```
 ```
-pyinstaller --windowed --icon=btwbgr_white_FIz_3.ico --clean --name BreaktimeWatch.py BreaktimeWatch_GUI.py
+pyinstaller --windowed --icon=Icon/btwbgr_white_FIz_3.ico --clean --name BreaktimeWatch.py BreaktimeWatch_GUI.py
 ```
 
 ## Support

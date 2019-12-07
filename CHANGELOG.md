@@ -1,7 +1,7 @@
 # BreaktimeWatch Changelog
 
 ## V1.3
-Icon change. Updatefunction added.
+Icon change. Updatefunction added. Settings added. Worktimewatch added.
 
 ## V1.2
 Changed GUI Style. Added Label

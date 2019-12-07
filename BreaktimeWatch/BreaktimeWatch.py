@@ -127,6 +127,37 @@ class Functions(object):
         except Exception as exc: 
             Functions.WriteLog(exc)
 
+    paramversion = ""
+    paramtime_bfr_break = ""
+    paramunpaid_breaktime = ""
+    paramworkhoursweek = ""
+
+    def GetSettingsFromJson():
+    
+        try:
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json')
+            json_array = json.load(file)
+            date_list = []
+
+            for item in json_array:
+                date_details = {}
+                date_details['time_bfr_break'] = item['time_bfr_break']
+                date_details['unpaid_breaktime'] = item['unpaid_breaktime']
+                date_details['version'] = item['version']        
+                date_details['workhours/week'] = item['workhours/week']
+                date_list.append(date_details)
+            file.close()
+
+            Functions.paramversion = date_details['version']
+            Functions.paramtime_bfr_break = date_details['time_bfr_break']
+            Functions.paramunpaid_breaktime = date_details['unpaid_breaktime']
+            Functions.paramworkhoursweek = date_details['workhours/week']
+
+
+        except Exception as exc: 
+            Functions.WriteLog(exc)
+
+
     
 
     def WriteLog(exc):
