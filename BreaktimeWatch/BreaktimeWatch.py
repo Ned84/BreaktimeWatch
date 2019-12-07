@@ -158,6 +158,29 @@ class Functions(object):
             Functions.WriteLog(exc)
 
 
+    def WriteSettingsToJson():
+        try:
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json', "r")
+            json_array = json.load(file)
+            date_list = []
+
+            for item in json_array:
+                date_details = {}
+                date_details['time_bfr_break'] = Functions.paramtime_bfr_break
+                date_details['unpaid_breaktime'] = Functions.paramunpaid_breaktime
+                date_details['version'] = Functions.paramversion      
+                date_details['workhours/week'] = Functions.paramworkhoursweek
+                date_list.append(date_details)
+            file.close()
+
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json', "w")
+            json.dump(date_list, file, indent=1, sort_keys=True)
+            file.close()
+
+        except Exception as exc: 
+            Functions.WriteLog(exc)
+
+
     
 
     def WriteLog(exc):

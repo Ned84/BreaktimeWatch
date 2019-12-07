@@ -541,28 +541,28 @@ class Ui_DialogSettings(object):
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
         self.label_4 = QtWidgets.QLabel(DialogSettings)
-        self.label_4.setGeometry(QtCore.QRect(160, 130, 161, 21))
+        self.label_4.setGeometry(QtCore.QRect(160, 130, 180, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
         self.lineEdit = QtWidgets.QLineEdit(DialogSettings)
-        self.lineEdit.setGeometry(QtCore.QRect(330, 70, 113, 22))
+        self.lineEdit.setGeometry(QtCore.QRect(350, 70, 75, 22))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
         self.lineEdit.setFont(font)
         self.lineEdit.setObjectName("lineEdit")
         self.lineEdit_2 = QtWidgets.QLineEdit(DialogSettings)
-        self.lineEdit_2.setGeometry(QtCore.QRect(330, 100, 113, 22))
+        self.lineEdit_2.setGeometry(QtCore.QRect(350, 100, 75, 22))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
         self.lineEdit_2.setFont(font)
         self.lineEdit_2.setObjectName("lineEdit_2")
         self.lineEdit_3 = QtWidgets.QLineEdit(DialogSettings)
-        self.lineEdit_3.setGeometry(QtCore.QRect(330, 130, 113, 22))
+        self.lineEdit_3.setGeometry(QtCore.QRect(350, 130, 75, 22))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
@@ -571,7 +571,19 @@ class Ui_DialogSettings(object):
 
         self.retranslateUi(DialogSettings)
         self.CancelButton.clicked.connect(DialogSettings.close)
+       # try:
+         #   self.OKButton.clicked.connect(btwf.Functions.WriteSettingsToJson())
+       # except Exception as exc: 
+       #     btwf.Functions.WriteLog(exc)
         QtCore.QMetaObject.connectSlotsByName(DialogSettings)
+
+        @pyqtSlot()
+        def WriteToJson(): 
+            btwf.Functions.paramworkhoursweek = self.lineEdit.text()
+            btwf.Functions.paramunpaid_breaktime = self.lineEdit_2.text()
+            btwf.Functions.paramtime_bfr_break = self.lineEdit_3.text()
+            btwf.Functions.WriteSettingsToJson()
+            DialogSettings.close()
 
         try: 
 
@@ -583,6 +595,8 @@ class Ui_DialogSettings(object):
         except Exception as exc:
             btwf.Functions.WriteLog(exc)
 
+        self.OKButton.clicked.connect(WriteToJson)
+
     def retranslateUi(self, DialogSettings):
         _translate = QtCore.QCoreApplication.translate
         DialogSettings.setWindowTitle(_translate("DialogSettings", "About BreaktimeWatch"))
@@ -591,7 +605,7 @@ class Ui_DialogSettings(object):
         self.CancelButton.setText(_translate("DialogSettings", "Cancel"))
         self.label.setText(_translate("DialogSettings", "Workhours/Week"))
         self.label_3.setText(_translate("DialogSettings", "Unpaid breaktime/day"))
-        self.label_4.setText(_translate("DialogSettings", "Worktime before break"))        
+        self.label_4.setText(_translate("DialogSettings", "Workime before break"))        
 
         
 
