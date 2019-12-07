@@ -31,7 +31,8 @@ class Functions(object):
     totalmin = 0
     totalsec = 0
     diffsec = 0
-    selecteddate = datetime.now()
+    selecteddate = ""
+    totalworkedhours = 0
 
 
     def __init__():
@@ -81,9 +82,10 @@ class Functions(object):
             for item in json_array:
                 date_details = {}
                 date_details['date'] = item['date']
-                date_details['totaltime'] = item['totaltime']
+                date_details['totalbreaktime'] = item['totalbreaktime']
+                date_details['totalworkedhours'] = item['totalworkedhours']
                 if date_details['date'] == date:
-                     date_details['totaltime'] = totalsec
+                     date_details['totalbreaktime'] = totalsec
 
                 date_list.append(date_details)
             print("JSON = \n\r       {0}".format(date_list))
@@ -102,27 +104,48 @@ class Functions(object):
             json_array = json.load(file)
             date_list = []
             found = False
+            daysoftheweek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+            totalhoursdate = 0
+
 
             for item in json_array:
                 date_details = {}
                 date_details['date'] = item['date']
-                date_details['totaltime'] = item['totaltime']
+                date_details['totalbreaktime'] = item['totalbreaktime']
+                date_details['totalworkedhours'] = item['totalworkedhours']
                 if date_details['date'] == date:
-                    Functions.totalsec = date_details['totaltime']
+                    Functions.totalsec = date_details['totalbreaktime']
                     Functions.totalmin = Functions.totalsec / 60
                     Functions.totalmin = math.floor(Functions.totalmin)
+                    totalhoursdate = date_details['totalworkedhours']
                     found = True
                 date_list.append(date_details)
+
             file.close()
 
             if found == False:
                 file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.JSON', "w+")
-                date_list.append({"date": date,"totaltime": 0})
+                date_list.append({"date": date,"totalbreaktime": 0, "totalworkedhours": 0})
                 json.dump(date_list,file, indent=1, sort_keys=True)
                 file.close()
                 Functions.totalsec = 0
                 Functions.totalmin = Functions.totalsec / 60
                 Functions.totalmin = math.floor(Functions.totalmin)
+
+
+            weekday = ("{0}".format(Functions.selecteddate))
+      
+            weekday = weekday[0:3]
+
+            daynumber = 0
+            index = 0
+            for day in daysoftheweek:
+                if day != weekday:
+                    index += 1
+                else:
+                    daynumber = index
+
+
 
         except Exception as exc: 
             Functions.WriteLog(exc)
@@ -179,7 +202,7 @@ class Functions(object):
 
 
 
-    def CalcAverageWorktime():
+    def CalcAverageWorktime(self, alreadyworkedhours, alreadyworkeddays):
         averageleft = (Functions.paramworkhoursperweek - alreadyworkedhours) / (Functions.paramworkdaysperweek - alreadyworkeddays)
 
         return averageleft

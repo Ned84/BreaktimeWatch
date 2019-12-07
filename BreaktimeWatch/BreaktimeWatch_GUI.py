@@ -58,7 +58,7 @@ class Ui_BreaktimeWatchGUI(object):
 
             if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.json') == False:
                 file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.json',"w+")
-                data = [{"date": "November 01, 1984","totaltime": 6013}]
+                data = [{"date": "November 01, 1984","totalbreaktime": 6013,"totalworkedhours": 0}]
                 json.dump(data,file, indent=1, sort_keys=True)
                 file.close()
 
@@ -74,10 +74,7 @@ class Ui_BreaktimeWatchGUI(object):
 
             btwf.Functions.GetSettingsFromJson()
 
-            daynow = datetime.now().strftime("%d-%m, %Y")
-            btwf.Functions.GetTotalFromJson(daynow)
-            btwf.Functions.totalmin = btwf.Functions.totalsec / 60
-            btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
+
 
         except Exception as exc:
             btwf.Functions.WriteLog(exc)
@@ -232,6 +229,18 @@ class Ui_BreaktimeWatchGUI(object):
         self.retranslateUi(BreaktimeWatchGUI)
         QtCore.QMetaObject.connectSlotsByName(BreaktimeWatchGUI)
 
+        try:
+            btwf.Functions.selecteddate = ("{0}".format(self.calendarWidget.selectedDate().toString()))
+            daynow = datetime.now().strftime("%d-%m, %Y")
+            btwf.Functions.GetTotalFromJson(daynow)
+            btwf.Functions.totalmin = btwf.Functions.totalsec / 60
+            btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
+
+            
+
+        except Exception as exc:
+            btwf.Functions.WriteLog(exc)
+
         @pyqtSlot()
         def WriteMinInTextbox():
             self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
@@ -257,6 +266,7 @@ class Ui_BreaktimeWatchGUI(object):
             btwf.Functions.GetTotalFromJson(daychosen)
             self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
             self.label.setText("{0}".format(btwf.Functions.totalmin))
+            btwf.Functions.selecteddate = ("{0}".format(self.calendarWidget.selectedDate().toString()))
 
         @pyqtSlot()
         def EditOnOff():         
@@ -330,7 +340,7 @@ class Ui_BreaktimeWatchGUI(object):
                 ShowWatch()
                 ProgressbarStart()
           
-        
+            
             if Ui_BreaktimeWatchGUI.updateavail == True and Ui_BreaktimeWatchGUI.updatecnt == 0:
                OpenDialogUpdate()
                Ui_BreaktimeWatchGUI.updatecnt = 1
