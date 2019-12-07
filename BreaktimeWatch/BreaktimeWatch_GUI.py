@@ -30,7 +30,8 @@ from datetime import datetime
 import json
 import math
 import webbrowser
-
+import threading
+import time
 version = "1.2"
 
 class Ui_BreaktimeWatchGUI(object):
@@ -63,7 +64,7 @@ class Ui_BreaktimeWatchGUI(object):
 
             if path.exists(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json') == False:
                 file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json',"w+")
-                data = [{"version": version,   "workhours/week": "",   "unpaid_breaktime": "",   "time_bfr_break": ""}]
+                data = [{"version": version,   "workhours_per_week": "38.5",   "workdays_per_week": "5"}]
                 json.dump(data,file, indent=1, sort_keys=True)
                 file.close()
 
@@ -71,33 +72,40 @@ class Ui_BreaktimeWatchGUI(object):
                 file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\logfiles\\btwlog.txt',"w+")
                 file.close()
 
+            btwf.Functions.GetSettingsFromJson()
+
             daynow = datetime.now().strftime("%d-%m, %Y")
             btwf.Functions.GetTotalFromJson(daynow)
             btwf.Functions.totalmin = btwf.Functions.totalsec / 60
             btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
 
         except Exception as exc:
-            Functions.WriteLog(exc)
-
+            btwf.Functions.WriteLog(exc)
+            
         try:
-            link = "https://github.com/Ned84/BreaktimeWatch/blob/master/Version.md"
+            
+            def UpdateCheck():
+                link = "https://github.com/Ned84/BreaktimeWatch/blob/master/Version.md"
   
-            url = request.urlopen(link)
-            readurl = url.read()
-            text = readurl.decode(encoding='utf-8',errors='ignore')
-            stringindex = text.find("BreaktimeWatchVersion") 
+                url = request.urlopen(link)
+                readurl = url.read()
+                text = readurl.decode(encoding='utf-8',errors='ignore')
+                stringindex = text.find("BreaktimeWatchVersion") 
 
-            if stringindex != -1:
-                Ui_BreaktimeWatchGUI.versionnew = text[stringindex + 23:stringindex + 26]
-                Ui_BreaktimeWatchGUI.versionnew = Ui_BreaktimeWatchGUI.versionnew.replace('_','.')
+                if stringindex != -1:
+                    Ui_BreaktimeWatchGUI.versionnew = text[stringindex + 23:stringindex + 26]
+                    Ui_BreaktimeWatchGUI.versionnew = Ui_BreaktimeWatchGUI.versionnew.replace('_','.')
 
-            if version != Ui_BreaktimeWatchGUI.versionnew:
-                Ui_BreaktimeWatchGUI.serverconnection = True
-                Ui_BreaktimeWatchGUI.updateavail = True
-            else:
-                Ui_BreaktimeWatchGUI.serverconnection = True
-                Ui_BreaktimeWatchGUI.updateavail = False
+                if version != Ui_BreaktimeWatchGUI.versionnew:
+                    Ui_BreaktimeWatchGUI.serverconnection = True
+                    Ui_BreaktimeWatchGUI.updateavail = True
+                else:
+                    Ui_BreaktimeWatchGUI.serverconnection = True
+                    Ui_BreaktimeWatchGUI.updateavail = False
 
+            urlthread = threading.Thread(target=UpdateCheck, daemon=True)
+            urlthread.start()
+                
             return super().__init__(*args, **kwargs)
 
         except Exception as exc: 
@@ -132,6 +140,12 @@ class Ui_BreaktimeWatchGUI(object):
         self.tabWidget.addTab(self.tab, "")
         self.tabWidget.addTab(self.tab_2, "")
         self.calendarWidget.setObjectName("calendarWidget")
+        self.progressbar = QtWidgets.QProgressBar(self.tab)
+        self.progressbar.setGeometry(QtCore.QRect(0, 90, 118, 23))
+        self.progressbar.setMaximum(60)
+        self.progressbar.setValue(0)
+        self.progressbar.setFormat("%v sec")
+        self.progressbar.hide()
         self.startButton = QtWidgets.QPushButton(self.tab)
         self.startButton.setGeometry(QtCore.QRect(10, 55, 93, 28))
         self.startButton.setObjectName("startButton")
@@ -162,6 +176,11 @@ class Ui_BreaktimeWatchGUI(object):
         self.totallabel.setGeometry(QtCore.QRect(115, 24, 44, 21))
         self.totallabel.setObjectName("totallabel")
         self.totallabel.setFont(QtGui.QFont("Arial", 11))
+        self.actualtimelabel = QtWidgets.QLabel(self.tab)
+        self.actualtimelabel.setGeometry(QtCore.QRect(125, 90, 118, 23))
+        self.actualtimelabel.setFont(QtGui.QFont("Arial", 11))
+        self.actualtimelabel.setText("0 min")
+        self.actualtimelabel.hide()
         self.frame = QtWidgets.QFrame(self.tab)
         self.frame.setGeometry(QtCore.QRect(290, -5, 151, 111))
         self.frame.setStyleSheet("image: url(:/resources/BtWbgre.png);")
@@ -180,6 +199,7 @@ class Ui_BreaktimeWatchGUI(object):
         self.frame_3.setObjectName("frame_3")
         self.minTextbox.raise_()
         self.label.raise_()
+        self.actualtimelabel.raise_()
         self.editButton1.raise_()
         self.totallabel.raise_()
         self.calendarWidget.raise_()
@@ -219,7 +239,7 @@ class Ui_BreaktimeWatchGUI(object):
 
         @pyqtSlot()
         def ShowWatch():     
-            self.frame_2.show()
+            self.frame_2.hide()
             self.editButton1.setEnabled(False)
             self.startButton.setEnabled(False)
             self.stopButton.setEnabled(True)
@@ -308,17 +328,50 @@ class Ui_BreaktimeWatchGUI(object):
             if Ui_BreaktimeWatchGUI.updateavail == False or Ui_BreaktimeWatchGUI.updatecnt == 1:
                 btwf.Functions.Start(self)
                 ShowWatch()
+                ProgressbarStart()
+          
         
             if Ui_BreaktimeWatchGUI.updateavail == True and Ui_BreaktimeWatchGUI.updatecnt == 0:
                OpenDialogUpdate()
                Ui_BreaktimeWatchGUI.updatecnt = 1
+       
+        def ProgressBarRun():
+            seconds = 0
+            minutes = 0
+            while self.actualtimelabel.isVisible() == True:         
+                time.sleep(1)
+                self.progressbar.setValue(seconds)
+                self.actualtimelabel.setText("{0} min".format(minutes))
+                if seconds >= 60:
+                    seconds = 0
+                    minutes += 1
+                seconds += 1
+            self.progressbar.setValue(0)
+            self.actualtimelabel.setText("0 min")
 
-        
+        @pyqtSlot()
+        def ProgressbarStart():
+            self.progressbar.show()
+            self.tabWidget.setTabEnabled(1 ,False) 
+            x = threading.Thread(name = "progressbar", target=ProgressBarRun, daemon=True)
+            if x.getName() == "progressbar":
+                self.actualtimelabel.show()
+                x.start()
+
+        @pyqtSlot()
+        def ProgressbarStop():
+            self.progressbar.hide()
+            self.tabWidget.setTabEnabled(1 ,True)
+            self.progressbar.setValue(0)
+            self.actualtimelabel.setText("0 min")
+            self.actualtimelabel.hide()
+
         self.startButton.clicked.connect(StartButtonPressed)
 
         self.stopButton.clicked.connect(btwf.Functions.Stop)
         self.stopButton.clicked.connect(WriteMinInTextbox)
         self.stopButton.clicked.connect(DisableWatch)
+        self.stopButton.clicked.connect(ProgressbarStop)
 
         self.editButton1.clicked.connect(EditOnOff)
 
@@ -540,13 +593,9 @@ class Ui_DialogSettings(object):
         font.setPointSize(10)
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
-        self.label_4 = QtWidgets.QLabel(DialogSettings)
-        self.label_4.setGeometry(QtCore.QRect(160, 130, 180, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
-        self.label_4.setFont(font)
-        self.label_4.setObjectName("label_4")
         self.lineEdit = QtWidgets.QLineEdit(DialogSettings)
         self.lineEdit.setGeometry(QtCore.QRect(350, 70, 75, 22))
         font = QtGui.QFont()
@@ -561,41 +610,32 @@ class Ui_DialogSettings(object):
         font.setPointSize(10)
         self.lineEdit_2.setFont(font)
         self.lineEdit_2.setObjectName("lineEdit_2")
-        self.lineEdit_3 = QtWidgets.QLineEdit(DialogSettings)
-        self.lineEdit_3.setGeometry(QtCore.QRect(350, 130, 75, 22))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(10)
-        self.lineEdit_3.setFont(font)
-        self.lineEdit_3.setObjectName("lineEdit_3")
 
         self.retranslateUi(DialogSettings)
         self.CancelButton.clicked.connect(DialogSettings.close)
-       # try:
-         #   self.OKButton.clicked.connect(btwf.Functions.WriteSettingsToJson())
-       # except Exception as exc: 
-       #     btwf.Functions.WriteLog(exc)
         QtCore.QMetaObject.connectSlotsByName(DialogSettings)
 
         @pyqtSlot()
         def WriteToJson(): 
-            btwf.Functions.paramworkhoursweek = self.lineEdit.text()
-            btwf.Functions.paramunpaid_breaktime = self.lineEdit_2.text()
-            btwf.Functions.paramtime_bfr_break = self.lineEdit_3.text()
+            btwf.Functions.paramworkhoursperweek = self.lineEdit.text()
+            btwf.Functions.paramworkdaysperweek = self.lineEdit_2.text()
             btwf.Functions.WriteSettingsToJson()
             DialogSettings.close()
 
+
         try: 
 
-            btwf.Functions.GetSettingsFromJson()
-            self.lineEdit.setText(btwf.Functions.paramworkhoursweek)
-            self.lineEdit_2.setText(btwf.Functions.paramunpaid_breaktime)
-            self.lineEdit_3.setText(btwf.Functions.paramtime_bfr_break)
+            self.lineEdit.setText(btwf.Functions.paramworkhoursperweek)
+            self.lineEdit_2.setText(btwf.Functions.paramworkdaysperweek)
            
         except Exception as exc:
             btwf.Functions.WriteLog(exc)
 
         self.OKButton.clicked.connect(WriteToJson)
+      
 
     def retranslateUi(self, DialogSettings):
         _translate = QtCore.QCoreApplication.translate
@@ -603,9 +643,9 @@ class Ui_DialogSettings(object):
         self.OKButton.setText(_translate("DialogSettings", "OK"))
         self.label_2.setText(_translate("DialogSettings", "Settings"))
         self.CancelButton.setText(_translate("DialogSettings", "Cancel"))
-        self.label.setText(_translate("DialogSettings", "Workhours/Week"))
-        self.label_3.setText(_translate("DialogSettings", "Unpaid breaktime/day"))
-        self.label_4.setText(_translate("DialogSettings", "Workime before break"))        
+        self.label.setText(_translate("DialogSettings", "Workhours per week"))
+        self.label_3.setText(_translate("DialogSettings", "Workdays per week"))
+              
 
         
 

@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from datetime import datetime
 import math
-import _thread
+import threading
 import json
 import os
 import sys
@@ -128,60 +128,62 @@ class Functions(object):
             Functions.WriteLog(exc)
 
     paramversion = ""
-    paramtime_bfr_break = ""
-    paramunpaid_breaktime = ""
-    paramworkhoursweek = ""
+    paramworkdaysperweek = 0
+    paramworkhoursperweek = 0
 
     def GetSettingsFromJson():
     
         try:
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json')
             json_array = json.load(file)
-            date_list = []
+            param_list = []
 
             for item in json_array:
-                date_details = {}
-                date_details['time_bfr_break'] = item['time_bfr_break']
-                date_details['unpaid_breaktime'] = item['unpaid_breaktime']
-                date_details['version'] = item['version']        
-                date_details['workhours/week'] = item['workhours/week']
-                date_list.append(date_details)
+                param_details = {}
+                param_details['workdays_per_week'] = item['workdays_per_week']
+                param_details['version'] = item['version']        
+                param_details['workhours_per_week'] = item['workhours_per_week']
+                param_list.append(param_details)
             file.close()
 
-            Functions.paramversion = date_details['version']
-            Functions.paramtime_bfr_break = date_details['time_bfr_break']
-            Functions.paramunpaid_breaktime = date_details['unpaid_breaktime']
-            Functions.paramworkhoursweek = date_details['workhours/week']
+            Functions.paramversion = param_details['version']
+            Functions.paramworkdaysperweek = param_details['workdays_per_week']
+            Functions.paramworkhoursperweek = param_details['workhours_per_week']
 
 
         except Exception as exc: 
             Functions.WriteLog(exc)
+
 
 
     def WriteSettingsToJson():
         try:
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json', "r")
             json_array = json.load(file)
-            date_list = []
+            param_list = []
 
             for item in json_array:
-                date_details = {}
-                date_details['time_bfr_break'] = Functions.paramtime_bfr_break
-                date_details['unpaid_breaktime'] = Functions.paramunpaid_breaktime
-                date_details['version'] = Functions.paramversion      
-                date_details['workhours/week'] = Functions.paramworkhoursweek
-                date_list.append(date_details)
+                param_details = {}
+                param_details['workdays_per_week'] = Functions.paramworkdaysperweek
+                param_details['version'] = Functions.paramversion       
+                param_details['workhours_per_week'] = Functions.paramworkhoursperweek
+                param_list.append(param_details)
             file.close()
 
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json', "w")
-            json.dump(date_list, file, indent=1, sort_keys=True)
+            json.dump(param_list, file, indent=1, sort_keys=True)
             file.close()
 
         except Exception as exc: 
             Functions.WriteLog(exc)
 
 
-    
+
+    def CalcAverageWorktime():
+        averageleft = (Functions.paramworkhoursperweek - alreadyworkedhours) / (Functions.paramworkdaysperweek - alreadyworkeddays)
+
+        return averageleft
+       
 
     def WriteLog(exc):
         logfile = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"a")
