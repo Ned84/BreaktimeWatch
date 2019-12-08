@@ -17,17 +17,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from datetime import datetime
+#from datetime import datetime
 import math
 import threading
 import json
 import os
 import sys
+import datetime
 
 
 class Functions(object):
-    time1 = datetime.now()
-    time2 = datetime.now()
+    time1 = datetime.datetime.now()
+    time2 = datetime.datetime.now()
     totalmin = 0
     totalsec = 0
     diffsec = 0
@@ -36,19 +37,19 @@ class Functions(object):
 
 
     def __init__():
-        dt = datetime.now()
+        dt = datetime.datetime.now()
         dtwithoutmill = dt.replace(microsecond=0)
         Functions.total = dtwithoutmill
 
     def GetTime(self):
-        dt = datetime.now()
+        dt = datetime.datetime.now()
         dtwithoutmill = dt.replace(microsecond=0)
         print(dtwithoutmill)
         return dtwithoutmill
 
     def Start(self):
         Functions.time1 = Functions.GetTime(self)
-        daynow = datetime.now().strftime("%d-%m, %Y")
+        daynow = datetime.datetime.now().strftime("%d-%m, %Y")
         Functions.GetTotalFromJson(daynow)
 
 
@@ -56,7 +57,7 @@ class Functions(object):
         Functions.time2 = Functions.GetTime(self)
         Functions.CalcDiff()
 
-        daynow = datetime.now().strftime("%d-%m, %Y")
+        daynow = datetime.datetime.now().strftime("%d-%m, %Y")
         Functions.WriteTimeToJson(daynow,Functions.totalsec)
 
         
@@ -133,6 +134,7 @@ class Functions(object):
                 Functions.totalmin = math.floor(Functions.totalmin)
 
 
+            totalhoursdate = 0
             weekday = ("{0}".format(Functions.selecteddate))
       
             weekday = weekday[0:3]
@@ -144,6 +146,18 @@ class Functions(object):
                     index += 1
                 else:
                     daynumber = index
+
+            datetime_object = datetime.datetime.strptime(date, '%d-%m, %Y')
+            for item in json_array:
+                index = 0
+                while index <= daynumber:
+                    timedeltadays = datetime_object - datetime.timedelta(days=index)
+                    timedeltadays = timedeltadays.strftime('%d-%m, %Y')
+                    if item['date'] == timedeltadays :
+                        totalhoursdate = totalhoursdate + item['totalworkedhours']
+                    index += 1
+               
+            totalhoursdate = totalhoursdate
 
 
 
@@ -210,7 +224,7 @@ class Functions(object):
 
     def WriteLog(exc):
         logfile = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\Logfiles\\btwlog.txt',"a")
-        dt = datetime.now()
+        dt = datetime.datetime.now()
         dtwithoutmill = dt.replace(microsecond=0)
         logfile.write("{0}".format(dtwithoutmill))
         logfile.write(": ")

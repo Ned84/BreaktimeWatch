@@ -262,11 +262,13 @@ class Ui_BreaktimeWatchGUI(object):
 
         @pyqtSlot()
         def ChangeSelectedDate(): 
+            btwf.Functions.selecteddate = ("{0}".format(self.calendarWidget.selectedDate().toString()))
             daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
             btwf.Functions.GetTotalFromJson(daychosen)
             self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
             self.label.setText("{0}".format(btwf.Functions.totalmin))
-            btwf.Functions.selecteddate = ("{0}".format(self.calendarWidget.selectedDate().toString()))
+            
+        
 
         @pyqtSlot()
         def EditOnOff():         
@@ -276,6 +278,7 @@ class Ui_BreaktimeWatchGUI(object):
                 self.minTextbox.setReadOnly(True)
                 self.calendarWidget.setEnabled(False)
                 self.calendarWidget.setSelectedDate(datetime.now())
+                btwf.Functions.selecteddate = ("{0}".format(self.calendarWidget.selectedDate().toString()))
                 daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
                 btwf.Functions.GetTotalFromJson(daychosen)
                 btwf.Functions.totalmin = btwf.Functions.totalsec / 60
@@ -306,6 +309,7 @@ class Ui_BreaktimeWatchGUI(object):
                 timechosen = timechosen * 60
                 btwf.Functions.WriteTimeToJson(daychosen,timechosen)
             else:
+                btwf.Functions.selecteddate = ("{0}".format(self.calendarWidget.selectedDate().toString()))
                 btwf.Functions.GetTotalFromJson(daychosen)
                 btwf.Functions.totalmin = btwf.Functions.totalsec / 60
                 btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
