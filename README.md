@@ -8,6 +8,8 @@
 Program to track breaktimes (coffe- or smokebreak) during workhours. 
 
 * [Description](#description)
+  * [BreaktimeWatch](#breaktimewatch)
+  * [WorktimeWatch](#worktimewatch)
 * [Dependencies](#dependencies)
 * [License](#license)
 * [Install](#install)
@@ -17,13 +19,24 @@ Program to track breaktimes (coffe- or smokebreak) during workhours.
 
 ## Description
 
-Fully editable breaktime tracker.
+### BreaktimeWatch
+
+Editable breaktime tracker.
 
 Times are logged in a JSON file and automatically retrieved uppon start.
 
 Times can be edited via the calendar widget.
 
+### WorktimeWatch
+
+Editable workhour tracker.
+
+Workhours are logged and the average working time for the current workweek to achieve the minimum workhours per week is calculated.
+
+
 ![BreaktimeWatch GUI](https://github.com/Ned84/BreaktimeWatch/blob/master/Screenshots/BreaktimeWatch_GUI.png)
+
+![BreaktimeWatch GUI](https://github.com/Ned84/BreaktimeWatch/blob/master/Screenshots/BreaktimeWatch_GUI_2.png)
 
 ## Dependencies
 
