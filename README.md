@@ -40,6 +40,8 @@ Workhours are logged and the average working time for the current workweek to ac
 
 ## Dependencies
 
+Python 3.8 from [here.](https://www.python.org/downloads/)
+
 PYQT5 from [this link.](https://pypi.org/project/PyQt5/)
 
 Optional Pyinstaller. Infos are [here.](https://www.pyinstaller.org/downloads.html)
