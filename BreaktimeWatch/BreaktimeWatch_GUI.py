@@ -32,7 +32,7 @@ import math
 import webbrowser
 import threading
 import time
-version = "1.2"
+version = "2.0"
 
 class Ui_BreaktimeWatchGUI(object):
 
