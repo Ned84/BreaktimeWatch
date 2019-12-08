@@ -251,6 +251,8 @@ class Functions(object):
         if workeddays != 0:
             averageleft = ((float)(Functions.paramworkhoursperweek) - (float)(Functions.totalworkedhours)) / (float)(workeddays)
         averageleft = round(averageleft,2)
+        if averageleft < 0:
+            averageleft = 0
         return averageleft
        
 

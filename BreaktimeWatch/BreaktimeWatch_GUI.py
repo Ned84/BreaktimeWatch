@@ -369,6 +369,8 @@ class Ui_BreaktimeWatchGUI(object):
                 self.workedhoursTextbox.setPlainText("{0}".format(timechosen))
                 self.totalworkedcalcLabel.setText("{0}".format(timechosen))
                 btwf.Functions.WriteWorkhoursToJSON(daychosen,timechosen)
+                btwf.Functions.GetTotalFromJson(daychosen)
+                self.averagehoursLabel.setText("{0}".format(btwf.Functions.CalcAverageWorktime()))
             else:
                 btwf.Functions.selecteddate = ("{0}".format(self.calendarWidget.selectedDate().toString()))
                 btwf.Functions.GetTotalFromJson(daychosen)
