@@ -157,7 +157,7 @@ class Ui_BreaktimeWatchGUI(object):
         self.edittab2Button.setGeometry(QtCore.QRect(110, 55, 93, 28))
         self.edittab2Button.setObjectName("edittab2Button")
         self.totalworkedLabel = QtWidgets.QLabel(self.tab_2)
-        self.totalworkedLabel.setGeometry(QtCore.QRect(0, 19, 104, 30))
+        self.totalworkedLabel.setGeometry(QtCore.QRect(5, 19, 104, 30))
         self.totalworkedLabel.setObjectName("minTextLabel")
         self.totalworkedLabel.setFont(QtGui.QFont("Arial", 11))  
         self.totalworkedLabel.setText("Workhours:")
