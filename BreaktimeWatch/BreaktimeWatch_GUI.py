@@ -153,11 +153,29 @@ class Ui_BreaktimeWatchGUI(object):
         self.editButton1 = QtWidgets.QPushButton(self.tab)
         self.editButton1.setGeometry(QtCore.QRect(210, 55, 93, 28))
         self.editButton1.setObjectName("editButton1")
+        self.edittab2Button = QtWidgets.QPushButton(self.tab_2)
+        self.edittab2Button.setGeometry(QtCore.QRect(110, 55, 93, 28))
+        self.edittab2Button.setObjectName("edittab2Button")
+        self.totalworkedLabel = QtWidgets.QLabel(self.tab_2)
+        self.totalworkedLabel.setGeometry(QtCore.QRect(0, 19, 104, 30))
+        self.totalworkedLabel.setObjectName("minTextLabel")
+        self.totalworkedLabel.setFont(QtGui.QFont("Arial", 11))  
+        self.totalworkedLabel.setText("Workhours:")
+        self.totalworkedcalcLabel = QtWidgets.QLabel(self.tab_2)
+        self.totalworkedcalcLabel.setGeometry(QtCore.QRect(100, 19, 104, 30))
+        self.totalworkedcalcLabel.setObjectName("minTextLabel")
+        self.totalworkedcalcLabel.setFont(QtGui.QFont("Arial", 11))  
+        self.totalworkedcalcLabel.setText("0")
+        self.workedhoursTextbox = QtWidgets.QPlainTextEdit(self.tab_2)
+        self.workedhoursTextbox.setGeometry(QtCore.QRect(97, 19, 75,30))
+        self.workedhoursTextbox.setFont(QtGui.QFont("Arial", 11))
+        self.workedhoursTextbox.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.workedhoursTextbox.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.workedhoursTextbox.hide()
         self.minTextbox = QtWidgets.QPlainTextEdit(self.tab)
-        self.minTextbox.setGeometry(QtCore.QRect(160, 19, 104, 30))
+        self.minTextbox.setGeometry(QtCore.QRect(160, 19, 75,30))
         self.minTextbox.setReadOnly(True)
-        self.minTextbox.setObjectName("minTextbox")
-        self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
+        self.minTextbox.setObjectName("minTextbox")      
         self.minTextbox.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.minTextbox.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.minTextbox.setFont(QtGui.QFont("Arial", 11))
@@ -165,9 +183,14 @@ class Ui_BreaktimeWatchGUI(object):
         self.label = QtWidgets.QLabel(self.tab)
         self.label.setGeometry(QtCore.QRect(165, 19, 104, 30))
         self.label.setObjectName("minTextLabel")
-        self.label.setText("{0}".format(btwf.Functions.totalmin))
-        self.label.setFont(QtGui.QFont("Arial", 11))
-        self.label.setText("{0}".format(btwf.Functions.totalmin))
+        self.label.setFont(QtGui.QFont("Arial", 11))     
+        self.averagehoursLabel = QtWidgets.QLabel(self.tab_2)
+        self.averagehoursLabel.setGeometry(QtCore.QRect(265, 19, 104, 30))
+        self.averagehoursLabel.setFont(QtGui.QFont("Arial", 11))
+        self.averageLabel = QtWidgets.QLabel(self.tab_2)
+        self.averageLabel.setGeometry(QtCore.QRect(190, 24, 75, 21))
+        self.averageLabel.setFont(QtGui.QFont("Arial", 11))
+        self.averageLabel.setText("Average:")
         self.totallabel = QtWidgets.QLabel(self.tab)
         self.totallabel.setEnabled(True)
         self.totallabel.setGeometry(QtCore.QRect(115, 24, 44, 21))
@@ -235,6 +258,12 @@ class Ui_BreaktimeWatchGUI(object):
             btwf.Functions.GetTotalFromJson(daynow)
             btwf.Functions.totalmin = btwf.Functions.totalsec / 60
             btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
+            self.label.setText("{0}".format(btwf.Functions.totalmin))
+            self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
+            self.averagehoursLabel.setText("{0}".format(btwf.Functions.CalcAverageWorktime()))
+            self.workedhoursTextbox.setPlainText("{0}".format(btwf.Functions.workedhoursatdate))
+            self.totalworkedcalcLabel.setText("{0}".format(btwf.Functions.workedhoursatdate))
+
 
             
 
@@ -267,6 +296,10 @@ class Ui_BreaktimeWatchGUI(object):
             btwf.Functions.GetTotalFromJson(daychosen)
             self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
             self.label.setText("{0}".format(btwf.Functions.totalmin))
+            self.averagehoursLabel.setText("{0}".format(btwf.Functions.CalcAverageWorktime()))
+            self.workedhoursTextbox.setPlainText("{0}".format(btwf.Functions.workedhoursatdate))
+            self.totalworkedcalcLabel.setText("{0}".format(btwf.Functions.workedhoursatdate))
+   
             
         
 
@@ -274,6 +307,7 @@ class Ui_BreaktimeWatchGUI(object):
         def EditOnOff():         
             if self.minTextbox.isReadOnly() == False:
                 self.minTextbox.hide()
+                self.workedhoursTextbox.hide()
                 self.label.show()
                 self.minTextbox.setReadOnly(True)
                 self.calendarWidget.setEnabled(False)
@@ -287,13 +321,21 @@ class Ui_BreaktimeWatchGUI(object):
                 self.label.setText("{0}".format(btwf.Functions.totalmin))
                 self.startButton.setEnabled(True)
                 self.stopButton.setEnabled(False)
+                self.averagehoursLabel.setText("{0}".format(btwf.Functions.CalcAverageWorktime()))
+                self.workedhoursTextbox.setPlainText("{0}".format(btwf.Functions.workedhoursatdate))
+                self.totalworkedcalcLabel.setText("{0}".format(btwf.Functions.workedhoursatdate))
+               
             else:
+                self.workedhoursTextbox.show()
                 self.minTextbox.show()
                 self.label.hide()
                 self.minTextbox.setReadOnly(False)
                 self.calendarWidget.setEnabled(True)
                 self.startButton.setEnabled(False)
                 self.stopButton.setEnabled(False)
+                self.averagehoursLabel.setText("{0}".format(btwf.Functions.CalcAverageWorktime()))
+                self.workedhoursTextbox.setPlainText("{0}".format(btwf.Functions.workedhoursatdate))
+                self.totalworkedcalcLabel.setText("{0}".format(btwf.Functions.workedhoursatdate))
                 
 
         @pyqtSlot()
@@ -315,6 +357,25 @@ class Ui_BreaktimeWatchGUI(object):
                 btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
                 self.minTextbox.setPlainText("{0}".format(btwf.Functions.totalmin))
                 self.label.setText("{0}".format(btwf.Functions.totalmin))
+
+        @pyqtSlot()
+        def EditWorkTimeValue(): 
+            daychosen = self.calendarWidget.selectedDate().toString("dd-MM, yyyy")
+            
+            timechosenstring = ("{0}".format(self.workedhoursTextbox.toPlainText()))
+            timechosenstring = timechosenstring.rstrip()
+            if  timechosenstring.replace('.', '', 1).isdigit()  :
+                timechosen = float("{0}".format(self.workedhoursTextbox.toPlainText()))
+                self.workedhoursTextbox.setPlainText("{0}".format(timechosen))
+                self.totalworkedcalcLabel.setText("{0}".format(timechosen))
+                btwf.Functions.WriteWorkhoursToJSON(daychosen,timechosen)
+            else:
+                btwf.Functions.selecteddate = ("{0}".format(self.calendarWidget.selectedDate().toString()))
+                btwf.Functions.GetTotalFromJson(daychosen)
+                btwf.Functions.totalmin = btwf.Functions.totalsec / 60
+                btwf.Functions.totalmin = math.floor(btwf.Functions.totalmin)
+                self.workedhoursTextbox.setPlainText("{0}".format(btwf.Functions.workedhoursatdate))
+                self.totalworkedcalcLabel.setText("{0}".format(btwf.Functions.workedhoursatdate))
 
         @pyqtSlot()
         def OpenDialogAbout(): 
@@ -388,10 +449,13 @@ class Ui_BreaktimeWatchGUI(object):
         self.stopButton.clicked.connect(ProgressbarStop)
 
         self.editButton1.clicked.connect(EditOnOff)
+        self.edittab2Button.clicked.connect(EditOnOff)
 
         self.calendarWidget.clicked.connect(ChangeSelectedDate)
 
         self.minTextbox.blockCountChanged.connect(EditTimeValue)
+
+        self.workedhoursTextbox.blockCountChanged.connect(EditWorkTimeValue)
 
         self.actionAbout.triggered.connect(OpenDialogAbout)
 
@@ -407,6 +471,7 @@ class Ui_BreaktimeWatchGUI(object):
         self.totallabel.setText(_translate("BreaktimeWatchGUI", "<html><head/><body><p><span style=\" font-size:11pt;\">Total</span></p></body></html>"))
         self.startButton.setText(_translate("BreaktimeWatchGUI", "Start"))
         self.stopButton.setText(_translate("BreaktimeWatchGUI", "Stop"))
+        self.edittab2Button.setText(_translate("BreaktimeWatchGUI", "Edit"))
         self.menuEdit.setTitle(_translate("BreaktimeWatchGUI", "Edit"))
         self.menuHelp.setTitle(_translate("BreaktimeWatchGUI", "Help"))        
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("BreaktimeWatchGUI", "Breaktimewatch"))

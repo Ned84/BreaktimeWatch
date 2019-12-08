@@ -34,6 +34,8 @@ class Functions(object):
     diffsec = 0
     selecteddate = ""
     totalworkedhours = 0
+    totalworkeddays = 0
+    workedhoursatdate = 0.0
 
 
     def __init__():
@@ -119,6 +121,7 @@ class Functions(object):
                     Functions.totalmin = Functions.totalsec / 60
                     Functions.totalmin = math.floor(Functions.totalmin)
                     totalhoursdate = date_details['totalworkedhours']
+                    Functions.workedhoursatdate = date_details['totalworkedhours']
                     found = True
                 date_list.append(date_details)
 
@@ -156,11 +159,10 @@ class Functions(object):
                     if item['date'] == timedeltadays :
                         totalhoursdate = totalhoursdate + item['totalworkedhours']
                     index += 1
+
+            Functions.totalworkeddays = daynumber + 1
+            Functions.totalworkedhours = totalhoursdate
                
-            totalhoursdate = totalhoursdate
-
-
-
         except Exception as exc: 
             Functions.WriteLog(exc)
 
@@ -214,11 +216,41 @@ class Functions(object):
         except Exception as exc: 
             Functions.WriteLog(exc)
 
+    def WriteWorkhoursToJSON(date, totalworkedhours):
+        try:
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.JSON', "r")
+            json_array = json.load(file)
+            date_list = []
+
+            for item in json_array:
+                date_details = {}
+                date_details['date'] = item['date']
+                date_details['totalbreaktime'] = item['totalbreaktime']
+                date_details['totalworkedhours'] = item['totalworkedhours']
+                if date_details['date'] == date:
+                     date_details['totalworkedhours'] = totalworkedhours
+
+                date_list.append(date_details)
+            print("JSON = \n\r       {0}".format(date_list))
+            file.close()
+
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.JSON', "w")
+            json.dump(date_list, file, indent=1, sort_keys=True)
+            file.close()
+
+        except Exception as exc: 
+            Functions.WriteLog(exc)
 
 
-    def CalcAverageWorktime(self, alreadyworkedhours, alreadyworkeddays):
-        averageleft = (Functions.paramworkhoursperweek - alreadyworkedhours) / (Functions.paramworkdaysperweek - alreadyworkeddays)
 
+    def CalcAverageWorktime():
+        averageleft = 0
+        workeddays = (int)(Functions.paramworkdaysperweek) - Functions.totalworkeddays
+        if workeddays < 0:
+            workeddays = 0
+        if workeddays != 0:
+            averageleft = ((float)(Functions.paramworkhoursperweek) - (float)(Functions.totalworkedhours)) / (float)(workeddays)
+        averageleft = round(averageleft,2)
         return averageleft
        
 
