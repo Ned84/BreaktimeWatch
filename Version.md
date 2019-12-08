@@ -1,1 +1,1 @@
-BreaktimeWatchVersion V1_2
+BreaktimeWatchVersion V2_0
