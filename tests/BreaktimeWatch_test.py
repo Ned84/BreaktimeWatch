@@ -37,7 +37,10 @@ class TestFunctions(object):
     totalmin = 0
     totalsec = 0
     diffsec = 0
-    selecteddate = datetime.now()
+    selecteddate = ""
+    totalworkedhours = 0
+    totalworkeddays = 0
+    workedhoursatdate = 0.0
 
     def test_GetTime(self):
         dt = datetime.now()
@@ -57,7 +60,7 @@ class TestFunctions(object):
         TestFunctions.test_CalcDiff(self)
 
         date = datetime.now().strftime("%d-%m, %Y")
-        TestFunctions.WriteTimeToJson(self, date, TestFunctions.totalsec)
+        TestFunctions.test_WriteTimeToJson(self)
 
         
     def test_CalcDiff(self): 
@@ -73,8 +76,10 @@ class TestFunctions(object):
         except Exception as exc: 
             TestFunctions.test_WriteLog(exc)
 
-    def WriteTimeToJson(self, date, totalsec):
+    def test_WriteTimeToJson(self):
         try:
+            date = 0
+            totalsec = 0
             file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\TimeData\\Data.JSON', "r")
             json_array = json.load(file)
             date_list = []
@@ -127,6 +132,97 @@ class TestFunctions(object):
 
         except Exception as exc: 
             TestFunctions.test_WriteLog(exc)
+
+    paramversion = ""
+    paramworkdaysperweek = 0
+    paramworkhoursperweek = 0
+
+    def test_GetSettingsFromJson(self):
+    
+        try:
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json')
+            json_array = json.load(file)
+            param_list = []
+
+            for item in json_array:
+                param_details = {}
+                param_details['workdays_per_week'] = item['workdays_per_week']
+                param_details['version'] = item['version']        
+                param_details['workhours_per_week'] = item['workhours_per_week']
+                param_list.append(param_details)
+            file.close()
+
+            Functions.paramversion = param_details['version']
+            Functions.paramworkdaysperweek = param_details['workdays_per_week']
+            Functions.paramworkhoursperweek = param_details['workhours_per_week']
+
+
+        except Exception as exc: 
+            TestFunctions.test_WriteLog(exc)
+
+
+
+    def test_WriteSettingsToJson(self):
+        try:
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json', "r")
+            json_array = json.load(file)
+            param_list = []
+
+            for item in json_array:
+                param_details = {}
+                param_details['workdays_per_week'] = Functions.paramworkdaysperweek
+                param_details['version'] = Functions.paramversion       
+                param_details['workhours_per_week'] = Functions.paramworkhoursperweek
+                param_list.append(param_details)
+            file.close()
+
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\btwtwparam\\Param.json', "w")
+            json.dump(param_list, file, indent=1, sort_keys=True)
+            file.close()
+
+        except Exception as exc: 
+            TestFunctions.test_WriteLog(exc)
+
+    def test_WriteWorkhoursToJSON(self):
+        try:
+            date = 0
+            totalworkedhours = 0
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.JSON', "r")
+            json_array = json.load(file)
+            date_list = []
+
+            for item in json_array:
+                date_details = {}
+                date_details['date'] = item['date']
+                date_details['totalbreaktime'] = item['totalbreaktime']
+                date_details['totalworkedhours'] = item['totalworkedhours']
+                if date_details['date'] == date:
+                     date_details['totalworkedhours'] = totalworkedhours
+
+                date_list.append(date_details)
+            print("JSON = \n\r       {0}".format(date_list))
+            file.close()
+
+            file = open(os.getenv('LOCALAPPDATA') + '\\BreaktimeWatch\\tmedta\\Data.JSON', "w")
+            json.dump(date_list, file, indent=1, sort_keys=True)
+            file.close()
+
+        except Exception as exc: 
+            TestFunctions.test_WriteLog(exc)
+
+
+
+    def test_CalcAverageWorktime(self):
+        averageleft = 0
+        workeddays = (int)(TestFunctions.paramworkdaysperweek) - TestFunctions.totalworkeddays
+        if workeddays < 0:
+            workeddays = 0
+        if workeddays != 0:
+            averageleft = ((float)(TestFunctions.paramworkhoursperweek) - (float)(TestFunctions.totalworkedhours)) / (float)(workeddays)
+        averageleft = round(averageleft,2)
+        if averageleft < 0:
+            averageleft = 0
+        return averageleft
 
     
 
