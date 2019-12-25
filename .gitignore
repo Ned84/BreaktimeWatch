@@ -1,0 +1,13 @@
+# VS Specific
+.vscode
+.vs
+
+# Unit-test and debug
+__pycache__
+.pytest_cache
+
+# Install Files
+BreaktimeWatch_V2.0
+Output
+build
+*.spec
